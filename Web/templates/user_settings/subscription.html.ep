@@ -1,0 +1,27 @@
+% layout 'standard', title => 'Profile', sb_active => 'subscription';
+
+%= include '_base/status_window';
+
+<div class="row">
+    <div class="col">
+        % if ( $person->subscription ) {
+            <h2 style="margin-top: 1.5em; margin-bottom: 1.5em" class="h2">Thank you for subscription!</h2>
+
+            <div class="col">
+                <form action="<%= $c->url_for( 'do_subscription_manage') %>" method="POST">
+                    <button id="checkout-and-portal-button" class="btn btn-lg btn-primary" type="submit">Manage Subscription</button>
+                </form>
+            </div>
+        % } else {
+            <div class="col">
+                <h2 style="margin-top: 1.5em; margin-bottom: 1.5em" class="h2">You don't have a current subscription.</h2>
+
+                <form action="<%= $c->url_for( 'do_subscription') %>" method="POST">
+                    <!-- Add a hidden field with the lookup_key of your Price -->
+                    <input type="hidden" name="lookup_key" value="<%= $c->config->{stripe}->{lookup_key} %>" />
+                    <button id="checkout-and-portal-button" class="btn btn-lg btn-primary" type="submit">Subscribe</button>
+                </form>
+            </div>
+        % }
+    </div>
+</div>

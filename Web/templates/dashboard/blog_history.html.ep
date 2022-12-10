@@ -1,0 +1,29 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'history'
+
+%= include '_base/status_window';
+
+<table style="border: 1px solid #ccc" class="table mt-5">
+    <tbody>
+        <tr>
+            <th class="text-nowrap">When?</th>
+            <th class="text-nowrap">What?</th>
+            <th class="text-nowrap">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        % for my $change ( @{$history} ) { 
+        <tr>
+            <td><%= $change->{dateref} %></a></td>
+            <td><%= $change->{message} %></a></td>
+            <td>
+                <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_dashboard_blog_history' ) %>">
+                    <input type="hidden" name="commit_hash" value="<%= $change->{commit} %>">
+                    <button type="submit" class="btn btn-sm btn-primary">Restore</button>
+                </form>
+            </td>
+        </tr>
+        % }
+    </tbody>
+</table>

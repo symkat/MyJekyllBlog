@@ -1,0 +1,77 @@
+- name: Install packages
+  apt:
+    name: [
+      'git',
+      'build-essential',
+      'libssl-dev',
+      'libz-dev',
+      'cpanminus',
+      'vim',
+      'curl',
+      'ack',
+      'tree',
+      'perl-doc',
+    ]
+    state: present
+
+- name: Create manager user
+  user:
+    name: manager
+    shell: /bin/bash
+    comment: Manager User Account
+
+- name: Create ~manager/.ssh
+  file:
+    state: directory
+    path: /home/manager/.ssh
+    owner: manager
+    group: manager
+    mode: 0700
+
+- name: Create ~manager/.ssh/authorized_keys from ~root
+  copy:
+    dest: /home/manager/.ssh/authorized_keys
+    src: /root/.ssh/authorized_keys
+    remote_src: true
+    owner: manager
+    group: manager
+    mode: 0600
+
+- name: Create ~manager/.ssh/config
+  copy:
+    dest: /home/manager/.ssh/config
+    content: "host *.{{ domain_name.root }}\n   StrictHostKeyChecking no\n"
+    owner: manager
+    group: manager
+    mode: 0600
+
+- name: Create ~manager/.gitconfig
+  copy:
+    dest: /home/manager/.gitconfig
+    content: "[user]\n\temail = manager@{{ domain_name.root }}\n\tname = Manager Bot\n"
+    owner: manager
+    group: manager
+    mode: 0600
+
+- name: Ensure that local::lib is used when logging in
+  lineinfile:
+    path: /home/manager/.bashrc
+    regexp: '^eval \$\(perl'
+    line: eval $(perl -Mlocal::lib)
+
+- name: Install Dist::Zilla
+  shell: cpanm Dist::Zilla
+  args:
+    creates: /home/manager/perl5/lib/perl5/Dist/Zilla.pm
+  environment:
+    PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
+    PERL5LIB:            '/home/manager/perl5/lib/perl5'
+    PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
+    PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
+    PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
+  become: true
+  become_user: manager
+  register: result
+  until: result is success
+  retries: 5
+

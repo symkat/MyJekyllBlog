@@ -1,0 +1,11 @@
+
+<button class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#job_log_window_<%= $job->{id} %>">View Logs</button>
+
+<div id="job_log_window_<%= $job->{id} %>" class="card-body collapse">
+    <hr />
+    <pre>
+        % for my $line ( @{$job->{notes}{logs}} ) {
+            <%= "$line\n" =%>
+        % }
+    </pre>
+</div>

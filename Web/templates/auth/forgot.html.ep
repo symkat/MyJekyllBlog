@@ -1,0 +1,19 @@
+% layout 'standard', title => 'Forgot Password', sb_active => 'forgot';
+
+<h2 class="mt-5 display-6 mb-4">Reset Password</h2>
+
+<p>If you have forgotten the password for your account, please enter the email address below and you will get a link to reset your password.</p>
+
+%= include '_base/status_window';
+
+<form autocomplete="off" style="margin-top: 1.5em" method="POST" action="<%= $c->url_for( 'do_forgot' ) %>">
+
+    <%= include '_base/form/input', type => 'email', name => 'email',
+        title => 'Email Address', 
+        help  => '',
+        value => $c->stash->{form}->{email}
+    %>
+    
+    <button type="submit" class="btn btn-primary float-end">Reset Password</button>
+</form>
+

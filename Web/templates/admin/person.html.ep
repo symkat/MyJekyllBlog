@@ -1,0 +1,81 @@
+% layout 'standard', title => 'Admin Panel', sb_active => 'admin';
+
+%= include 'admin/_nav', page => 'person'
+
+%= include '_base/status_window';
+
+% if ( @{$c->stash->{notes}} ) {
+    <div style="margin-top: 2em" class="alert alert-primary" role="alert">
+        <p>There are the following notes on this account:</p>
+        <ul>
+%      foreach my $note ( @{$c->stash->{notes}} ) {
+            <li><%= $note->content %> ~<%= $note->source->name %></li>
+%  }
+        </ul>
+    </div>
+% }
+
+<form class="row mt-3 gy-2 gx-3 align-items-center" method="POST" enctype="multipart/form-data" action="<%= $c->url_for( 'do_admin_person_note', { id => $profile->id } ) %>">
+    <div class="col-auto">
+        <label for="content" class="col-form-label">Account Note</label>
+    </div>
+
+    <div class="col-auto">
+        <input type="text" class="form-control" id="content" name="content" >
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-primary">Add Note</button>
+    </div>
+</form>
+
+<table style="border: 1px solid #ccc" class="mt-3 table">
+    <tbody>
+        <tr>
+            <th class="text-nowrap">Name</th>
+            <th class="text-nowrap">Email Address</th>
+            <th class="text-nowrap">Created</th>
+            <th class="text-nowrap">Become User</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><a href="<%= $c->url_for( 'show_admin_person', { id => $profile->id } ) %>"><%= $profile->name %></a></td>
+            <td><%= $profile->email %></td>
+            <td><%= $profile->created_at->strftime( "%F" ) %></td>
+            <td>
+                <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_become' ) %>">
+                    <input type="hidden" name="uid" value="<%= $profile->id %>">
+                    <input type="hidden" name="url" value="<%= $c->url_for %>">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Login</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table style="border: 1px solid #ccc" class="mt-3 table">
+    <tbody>
+        <tr>
+            <th class="text-nowrap">Blog Domain</th>
+            <th class="text-nowrap">Created</th>
+            <th class="text-nowrap">Manage Blog</th>
+        </tr>
+    </thead>
+    <tbody>
+        % for my $blog ( $profile->blogs->all ) { 
+        <tr>
+            <td><a target="_blank" href="https://<%= $blog->domain->name %>/"><%= $blog->domain->name %></a></td>
+            <td><%= $blog->created_at->strftime( "%F" ) %></td>
+            <td>
+                <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_become' ) %>">
+                    <input type="hidden" name="uid" value="<%= $profile->id %>">
+                    <input type="hidden" name="bid" value="<%= $blog->id %>">
+                    <input type="hidden" name="url" value="<%= $c->url_for %>">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Manage Blog</button>
+                </form>
+            </td>
+        </tr>
+        % } 
+    </tbody>
+</table>

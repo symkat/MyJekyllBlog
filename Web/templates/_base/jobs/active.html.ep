@@ -1,0 +1,25 @@
+<div class="card mt-4">
+    <div class="card-header alert-warning">
+        <div class="spinner-grow spinner-grow-sm" role="status">
+            <span class="visually-hidden">Building...</span>
+        </div>
+
+        Building job <%= $job->{id} %>/<%= $job->{task} %>...  (Queued: <%= $date %>)
+
+    </div>
+    <div id="job_window_<%= $job->{id} %>" class="card-body">
+        
+        %= include '_base/jobs/_milestones/' . $job->{notes}->{_job_template}, job => $job
+
+        <hr />
+
+        <div id="job_log_window_<%= $job->{id} %>" class="card-body">
+            <hr />
+            <pre>
+                % for my $line ( @{$job->{notes}{logs}} ) {
+                    <%= "$line\n" =%>
+                % }
+            </pre>
+        </div>
+    </div>
+</div>

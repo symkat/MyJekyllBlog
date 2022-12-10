@@ -1,0 +1,68 @@
+- name: Install packages
+  apt:
+    name: [
+      'apt-transport-https',
+      'ca-certificates',
+      'curl',
+      'gnupg',
+      'lsb-release',
+    ]
+    state: present
+
+- name: Install Docker Keyring 
+  shell: curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/docker-archive-keyring.gpg
+
+- name: Install Docker Repo File
+  shell: echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > 
+    /etc/apt/sources.list.d/docker.list
+  args:
+    creates: /etc/apt/sources.list.d/docker.list
+
+- name: Update apt cache
+  apt:
+    name: "curl"
+    state: latest
+    update_cache: yes
+
+- name: Install Docker Packages
+  apt:
+    name: [
+      'docker-ce',
+      'docker-ce-cli',
+      'containerd.io',
+    ]
+    state: present
+
+- name: Make sure we have a wheel group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow wheel group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: Add manager to docker and wheel group
+  user:
+    name: manager
+    groups: docker,wheel
+    append: yes
+
+- name: Start & enable docker
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Start & enable containerd
+  service:
+    name: containerd
+    state: started
+    enabled: true
+

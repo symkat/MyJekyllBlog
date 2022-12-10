@@ -1,0 +1,38 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'edit'
+
+%= include '_base/status_window';
+
+<form autocomplete="off" method="POST" action="<%= $c->url_for( 'do_dashboard_blog_post_edit' ) %>">
+    <input type="hidden" name="mdfile" value="<%= $post->filename %>">
+
+    <div class="row">
+        <div class="col col-9">
+            <div class="mb-3">
+                <label for="postTitle" class="col-sm-2 col-form-label">Title</label>
+                <input type="text" class="form-control" id="postTitle" name="postTitle" value="<%= $post->headers->{title} %>" disabled>
+            </div>
+        </div>
+        <div class="col col-3">
+            <div class="mb-3">
+                <label for="postDate" class="col-sm-2 col-form-label">Date</label>
+                <input type="text" class="form-control datepicker" id="postDate" name="postDate" value="<%= $post->headers->{date} %>">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mt-3 mb-3">
+            <input type="submit" class="btn btn-primary btn-sm float-end" width="100%" value="Update Post">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mb-3">
+            <textarea class="form-control" id="markdown_editor_panel" name="postContent" rows="25"><%= $post->markdown %></textarea>
+        </div>
+    </div>
+</form>
+
+<a href="<%= $c->url_for( 'show_dashboard_blog_post_alter', { id => $blog->id } )->query(mdfile => $post->filename)  %>">Advanced Editor</a>

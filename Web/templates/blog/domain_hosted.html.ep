@@ -1,0 +1,46 @@
+% layout 'standard', title => 'Create Blog', sb_active => 'dashboard';
+
+<div class="mt-5">
+    <div class="progress" style="height: 1px;">
+        <div class="progress-bar" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-light" role="progressbar" style="width: 34%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-light" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="progress mt-1" style="height: 20px;">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Domain Name</div>
+        <div class="progress-bar" role="progressbar" style="width: 34%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Blog Settings</div>
+        <div class="text-center progress-bar-striped" style="width: 33%">Finish</div>
+    </div>
+</div>
+
+<h3 class="h3 mt-4 mb-4">Create new blog</h3>
+
+<p>The first step of creating your new blog is to choose a domain name.</p>
+
+<p>You can host your blog on a sub domain we provide for free, without any additional configuration.  Enter the sub domain you'd like below and press continue.</p>
+
+<p>If you own your own domain name and would like to use that, please <a href="<%= $c->url_for( 'show_blog_domain_owned' )  %>">click here</a> to continue.</p>
+
+%= include '_base/status_window';
+
+<form autocomplete="off" class="mt-5" method="POST" action="<%= $c->url_for( 'do_blog_domain' ) %>">
+    <input type="hidden" name="calling_route" value="show_blog_domain_hosted">
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="domain-addon-1">https://</span>
+                <input type="text" name="hosted_subdomain" class="form-control" value="<%= $c->stash->{form}->{hosted_subdomain} %>" placeholder="YourSiteName" aria-label="domain name" aria-describedby="domain-addon">
+                <span class="input-group-text" id="domain-addon-2">.
+                    <select name="hosted_domain_id" class="form-select" aria-label="Select Domain Name">
+                        % foreach my $hosted_domain ( $c->db->hosted_domains->all ) {
+                            <option name="hosted_domain_id" value="<%= $hosted_domain->id %>" <%= $c->stash->{form}->{hdid} && $c->stash->{form}->{hdid} == $hosted_domain->id ? 'selected' : '' %>><%= $hosted_domain->name %></option>
+                        % } 
+                    </select>
+                </span>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary float-end mt-3">Continue &rarr;</button>
+</form>

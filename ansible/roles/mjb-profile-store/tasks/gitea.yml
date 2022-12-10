@@ -1,0 +1,122 @@
+- name: Create gitea user
+  user:
+    name: git
+    shell: /bin/bash
+    password_lock: yes
+    comment: Git Version Control
+
+- name: Create /var/lib/gitea
+  file:
+    state: directory
+    path: /var/lib/gitea
+    owner: git
+    group: git
+    mode: 0750
+
+- name: Create /var/lib/gitea/custom
+  file:
+    state: directory
+    path: /var/lib/gitea/custom
+    owner: git
+    group: git
+    mode: 0750
+
+- name: Create /var/lib/gitea/data
+  file:
+    state: directory
+    path: /var/lib/gitea/data
+    owner: git
+    group: git
+    mode: 0750
+
+- name: Create /var/lib/gitea/log
+  file:
+    state: directory
+    path: /var/lib/gitea
+    owner: git
+    group: git
+    mode: 0750
+
+- name: Create /etc/gitea
+  file:
+    state: directory
+    path: /etc/gitea
+    owner: root
+    group: git
+    mode: 0770
+
+# Store gitea-1.17.1-linux-amd64 as gitea-1.17.1-linux-amd64.tgz in the repo to
+# cut the size in half and have GitHub allow it to be hosted there.  Unpack locally.
+- name: Unpack gitea-1.17.1-linux-amd64
+  delegate_to: localhost
+  shell:
+    tar -xzf gitea-1.17.1-linux-amd64.tgz
+  args:
+    chdir: "{{ role_path }}/files/"
+    creates: "{{ role_path }}/files/gitea-1.17.1-linux-amd64"
+
+- name: Install /usr/local/bin/gitea
+  copy:
+    dest: /usr/local/bin/gitea
+    src: "{{ role_path }}/files/gitea-1.17.1-linux-amd64"
+    owner: root
+    group: root
+    mode: 0755
+
+# gitea dump command does not work when using
+#
+# cd /var/lib/gitea ; /usr/local/bin/gitea dump -c /etc/gitea/app.ini
+# and requires
+# cd /var/lib/gitea ; ./gitea dump -c /etc/gitea/app.ini
+# instead.
+- name: Install /var/lib/gitea
+  copy:
+    dest: /var/lib/gitea/gitea
+    src: "{{ role_path }}/files/gitea-1.17.1-linux-amd64"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install /etc/systemd/system/gitea.service
+  copy:
+    dest: /etc/systemd/system/gitea.service
+    src: "{{ role_path }}/files/gitea.service"
+    owner: root
+    group: root
+    mode: 0744
+
+#- name: Generate internal token secret for gitea
+#  shell: /usr/local/bin/gitea generate secret INTERNAL_TOKEN
+#  register: internal_token
+#
+#- name: Generate jwt token secret for gitea
+#  shell: /usr/local/bin/gitea generate secret JWT_SECRET
+#  register: jwt_token
+
+- name: "Install /etc/gitea/app.ini"
+  template:
+    src: "{{ role_path }}/templates/app.ini.j2"
+    dest: "/etc/gitea/app.ini"
+    force: no
+    owner: root
+    group: git
+    mode: 0640
+
+- name: Enable Gitea
+  service:
+    name: gitea
+    state: started
+    enabled: true
+
+- name: Create admin user for gitea
+  shell: gitea -c /etc/gitea/app.ini admin user create --admin --username {{ gitea.user }} --password {{ gitea.pass }} --email {{ gitea.email }} > /home/git/.first
+  environment:
+    GITEA_WORK_DIR: /var/lib/gitea/
+  args:
+    creates: /home/git/.first
+  become: true
+  become_user: git
+
+
+
+

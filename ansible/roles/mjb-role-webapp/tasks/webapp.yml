@@ -1,0 +1,89 @@
+- name: Install packages to support postgres
+  apt:
+    name: [
+      'libpq-dev',
+      'postgresql-client',
+      'postgresql-contrib',
+    ]
+    state: present
+
+- name: Install /etc/mjb.yml
+  template:
+    src: "{{ role_path }}/templates/mjb.yml.j2"
+    dest: /etc/mjb.yml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Git clone from {{ repo }}"
+  git:
+    repo: "{{ repo }}"
+    dest: /home/manager/mjb
+    accept_hostkey: true
+  become: true
+  become_user: manager
+
+- name: Create /home/manager/.build-logs 
+  file:
+    state: directory
+    path:  /home/manager/.build-logs
+    owner: manager
+    group: manager
+    mode: 0750
+
+- name: Build MJB::DB
+  shell: dzil build > /home/manager/.build-logs/mjb-db.log 2>&1
+  args:
+    chdir: /home/manager/mjb/DB
+    creates: /home/manager/.build-logs/mjb-db.log
+  environment:
+    PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
+    PERL5LIB:            '/home/manager/perl5/lib/perl5'
+    PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
+    PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
+    PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
+  become: true
+  become_user: manager
+
+- name: Install MJB::DB
+  shell: cpanm MJB-DB-*.tar.gz
+  args:
+    chdir: /home/manager/mjb/DB
+    creates: /home/manager/perl5/lib/perl5/MJB/DB.pm
+  environment:
+    PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
+    PERL5LIB:            '/home/manager/perl5/lib/perl5'
+    PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
+    PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
+    PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
+  become: true
+  become_user: manager
+
+- name: Clean MJB::DB
+  shell: dzil clean
+  args:
+    chdir: /home/manager/mjb/DB
+  environment:
+    PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
+    PERL5LIB:            '/home/manager/perl5/lib/perl5'
+    PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
+    PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
+    PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
+  become: true
+  become_user: manager
+
+- name: Install MJB::Web Dependencies
+  shell: cpanm --installdeps . > /home/manager/.build-logs/mjb-web.log 2>&1
+  args:
+    chdir: /home/manager/mjb/Web
+    creates: /home/manager/.build-logs/mjb-web.log
+  environment:
+    PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
+    PERL5LIB:            '/home/manager/perl5/lib/perl5'
+    PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
+    PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
+    PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
+
+  become: true
+  become_user: manager
+

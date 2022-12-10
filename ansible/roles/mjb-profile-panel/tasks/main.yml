@@ -1,0 +1,40 @@
+---
+- name: Update all packages to their latest version
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Support running MJB::Web
+  include_role:
+    name: mjb-role-webapp
+
+- name: Install mjb-web.service file.
+  copy:
+    dest: /etc/systemd/system/mjb.panel.service
+    src: "{{ role_path }}/files/mjb.panel.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Install SSH Key for Gitea Store IO"
+  copy:
+    dest: /home/manager/.ssh/id_rsa
+    src: "{{ inventory_dir }}/files/ssh/id_rsa"
+    owner: manager
+    group: manager
+    mode: 0600
+
+- name: Support running stripe-backend
+  include_tasks:
+    file: stripe-backend.yml
+
+- name: Start & enable mjb.panel
+  service:
+    name: mjb.panel
+    state: started
+    enabled: true
+
+- name: Support an nginx web server for MJB::Web
+  include_tasks: 
+    file: webserver.yml

@@ -1,0 +1,67 @@
+<nav aria-label="breadcrumb" class="mt-3 mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%= $c->url_for( 'show_dashboard' ) %>">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><%= $blog->domain->name %></li>
+    </ol>
+</nav>
+
+<h3 class="h3 mt-4 mb-4"><a target="_blank" style="text-decoration: none" href="https://<%= $blog->domain->name %>"><%= $blog->domain->name %></h3>
+
+<ul class="mt-3 nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link <%= $page eq 'info' ? 'active' : '' %>" aria-current="page" href="<%= $c->url_for( 'show_dashboard_blog' ) %>"><span data-feather="info"></span> Info</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link <%= $page eq 'posts' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_posts' ) %>"><span data-feather="book-open"></span> Posts</a>
+    </li>
+
+    % if ( $page eq 'create' ) {
+        <li class="nav-item">
+            <a class="nav-link active" href="#"><span data-feather="file-plus"></span> Post Creator</a>
+        </li>
+    % }
+    % if ( $page eq 'edit' ) {
+        <li class="nav-item">
+            <a class="nav-link active" href="#"><span data-feather="edit"></span> Post Editor</a>
+        </li>
+    % }
+    
+    <li class="nav-item">
+        <a class="nav-link <%= $page eq 'pages' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_pages' ) %>"><span data-feather="clipboard"></span> Pages</a>
+    </li>
+    
+    % if ( $page eq 'page-create' ) {
+        <li class="nav-item">
+            <a class="nav-link active" href="#"><span data-feather="file-plus"></span> Page Creator</a>
+        </li>
+    % }
+    % if ( $page eq 'page-edit' ) {
+        <li class="nav-item">
+            <a class="nav-link active" href="#"><span data-feather="edit"></span> Page Editor</a>
+        </li>
+    % }
+
+    <li class="nav-item">
+        <a class="nav-link <%= $page eq 'media' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_media' ) %>"><span data-feather="camera"></span> Media</a>
+    </li>
+
+    <div class="flex-grow-1 text-right"></div>
+    
+    <li class="nav-item">
+        <a class="nav-link <%= $page eq 'jobs' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_jobs' ) %>">
+            % if ( $page ne 'jobs' && $c->minion->jobs({ states => [ 'inactive', 'active' ], notes => [ '_bid_' . $blog->id ] } )->total >= 1 ) {
+                <div class="spinner-grow spinner-grow-sm text-warning" role="status">
+                    <span class="visually-hidden">Jobs Running</span>
+                </div>
+            % }
+            <span data-feather="activity"></span> Jobs
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link <%= $page eq 'settings' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_settings' ) %>"><span data-feather="settings"></span> Settings</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link <%= $page eq 'history' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_history' ) %>"><span data-feather="calendar"></span> History</a>
+    </li>
+</ul>

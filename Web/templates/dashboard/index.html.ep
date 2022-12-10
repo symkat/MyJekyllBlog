@@ -1,0 +1,48 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+<nav aria-label="breadcrumb" class="mt-3 mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page"><a href="<%= $c->url_for( 'show_dashboard' ) %>">Dashboard</a></li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col">
+        <div class="float-end">
+            <a style="text-decoration: none;" href="<%= $c->url_for( 'show_blog_domain_hosted' ) %>">
+                <span style="color: green; width: 32px; height: 32px;" data-feather="plus-circle"></span>
+                <cpan style="color: black; vertical-align: 30%; font-size: 16px">New Blog</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+% if ( $person->blogs >= 1 ) {
+    <h3 class="h3 mt-3 mb-3">My Websites</h3>
+    <table style="border: 1px solid #ccc" class="table mb-5">
+        <tbody>
+            <tr>
+                <th class="text-nowrap">Domain</th>
+                <th class="text-nowrap">Blog Manager</th>
+            </tr>
+        </thead>
+        <tbody>
+            % for my $blog ( $person->blogs ) {
+            <tr>
+                <td><a target="_blank" href="https://<%= $blog->domain->name %>"><%= $blog->domain->name %></a></td>
+                <td><a class="btn btn-sm btn-primary" href="<%= $c->url_for( 'show_dashboard_blog', { id => $blog->id } ) %>">Manage Blog</a></td>
+            </tr>
+            % }
+        </tbody>
+    </table>
+% } else {
+    <div style="margin-top: 2em" class="alert alert-success" role="alert">
+        <p>Hello and welcome to MyJekyllBlog,</p>
+
+        <p>You can create your own blog by clicking the <span class="fw-bolder">New Blog</span> button just above this message box and to the right.</p>
+
+        <p>Thank you for signing up!</p>
+
+    </div>
+
+% }

@@ -1,0 +1,39 @@
+% if ( my $confirmation = flash 'confirmation' ) {
+    <div style="margin-top: 2em" class="alert alert-success" role="alert">
+    <%== $confirmation %>
+    </div>
+%  }
+
+% if ( my $error_message = flash 'error_message' ) {
+    <div style="margin-top: 2em" class="alert alert-danger" role="alert">
+    <%== $error_message %>
+    </div>
+%  }
+
+% if ( $c->stash->{success} ) {
+    <div style="margin-top: 2em" class="alert alert-success" role="alert">
+    <%= $c->stash->{success_message} %>
+    </div>
+%  }
+
+% if ( my $errors = flash 'errors' ) {
+    <div style="margin-top: 2em" class="alert alert-danger" role="alert">
+        There were errors with your request that could not be resolved:
+        <ul>
+%      for my $error ( @{$errors} ) {
+            <li><%= $error %></li>
+%  }
+        </ul>
+    </div>
+%  }
+
+% if ( $c->stash->{errors} ) {
+    <div style="margin-top: 2em" class="alert alert-danger" role="alert">
+        There were errors with your request that could not be resolved:
+        <ul>
+%      for my $error ( @{$c->stash->{errors}} ) {
+            <li><%= $error %></li>
+%  }
+        </ul>
+    </div>
+%  }

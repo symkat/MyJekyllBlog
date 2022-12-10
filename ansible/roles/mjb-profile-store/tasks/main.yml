@@ -1,0 +1,66 @@
+---
+- name: Update all packages to their latest version
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Install packages
+  apt:
+    name: [
+      'git',
+    ]
+    state: present
+
+- name: Setup the databases
+  include_tasks: database.yml
+
+- name: Support running MJB::Web
+  include_role:
+    name: mjb-role-webapp
+
+- name: Populate the MJB Database
+  shell: /home/manager/mjb/Web/script/mjb dbc < /home/manager/mjb/DB/etc/schema.sql > /home/manager/.build-logs/schema.log 2>&1
+  args:
+    creates: /home/manager/.build-logs/schema.log
+  environment:
+    PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
+    PERL5LIB:            '/home/manager/perl5/lib/perl5'
+    PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
+    PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
+    PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
+  become: true
+  become_user: manager
+
+- name: Create initial admin user account
+  shell: /home/manager/mjb/Web/script/mjb create-user "{{ admin_user.name }}" "{{ admin_user.email }}" "{{ admin_user.pass }}" > /home/manager/.build-logs/user-create.log 2>&1
+  args:
+    creates: /home/manager/.build-logs/user-create.log
+  environment:
+    PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
+    PERL5LIB:            '/home/manager/perl5/lib/perl5'
+    PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
+    PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
+    PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
+  become: true
+  become_user: manager
+
+- name: Promote initial admin user account to admin
+  shell: /home/manager/mjb/Web/script/mjb flip-admin "{{ admin_user.email }}" > /home/manager/.build-logs/flip-admin.log 2>&1
+  args:
+    creates: /home/manager/.build-logs/flip-admin.log
+  environment:
+    PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
+    PERL5LIB:            '/home/manager/perl5/lib/perl5'
+    PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
+    PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
+    PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
+  become: true
+  become_user: manager
+
+- name: Setup the webserver
+  include_tasks: webserver.yml
+
+- name: Setup the gitea service
+  include_tasks: gitea.yml
+

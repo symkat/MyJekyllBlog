@@ -1,0 +1,39 @@
+- name: Configure Store Server
+  remote_user: root
+  hosts: store
+  vars:
+    ansible_ssh_common_args: -oControlMaster=auto -oControlPersist=60s -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no
+  roles:
+    - mjb-profile-store
+
+- name: Configure Certbot Server
+  remote_user: root
+  hosts: certbot
+  vars:
+    ansible_ssh_common_args: -oControlMaster=auto -oControlPersist=60s -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no
+  roles:
+    - mjb-profile-certbot
+
+- name: Configure Build Servers
+  remote_user: root
+  hosts: buildservers
+  vars:
+    ansible_ssh_common_args: -oControlMaster=auto -oControlPersist=60s -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no
+  roles:
+    - mjb-profile-buildserver
+
+- name: Configure The Panel Server
+  remote_user: root
+  hosts: panel
+  vars:
+    ansible_ssh_common_args: -oControlMaster=auto -oControlPersist=60s -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no
+  roles:
+    - mjb-profile-panel
+
+- name: Configure Web Servers
+  remote_user: root
+  hosts: webservers
+  vars:
+    ansible_ssh_common_args: -oControlMaster=auto -oControlPersist=60s -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no
+  roles:
+    - mjb-profile-webserver

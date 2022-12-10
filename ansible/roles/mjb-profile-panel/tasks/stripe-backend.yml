@@ -1,0 +1,29 @@
+- name: Install packages
+  apt:
+    name: [
+      'python3-pip',
+      'gunicorn',
+    ]
+    state: present
+
+- name: Install stripe-backend.service file.
+  copy:
+    dest: /etc/systemd/system/stripe-backend.service
+    src: "{{ role_path }}/files/stripe-backend.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install Python Packages 
+  shell: pip3 install "{{ item }}"
+  become: true
+  become_user: manager
+  with_items:
+    - "flask"
+    - "stripe"
+
+- name: Start Stripe Backend
+  service:
+    name: stripe-backend
+    state: restarted
+    enabled: true

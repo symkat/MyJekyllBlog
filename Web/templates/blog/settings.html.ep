@@ -1,0 +1,42 @@
+% layout 'standard', title => 'Create Blog', sb_active => 'dashboard';
+
+<div class="mt-5">
+    <div class="progress" style="height: 1px;">
+        <div class="progress-bar bg-light" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar" role="progressbar" style="width: 34%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-light" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="progress mt-1" style="height: 20px;">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Domain Name</div>
+        <div class="progress-bar" role="progressbar" style="width: 34%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Blog Settings</div>
+        <div class="text-center progress-bar-striped" style="width: 33%">Finish</div>
+    </div>
+</div>
+
+<h2 style="margin-top: 1.5em; margin-bottom: 1em" class="h2">Blog Settings</h2>
+
+<p>Let's name and describe this!</p>
+
+%= include '_base/status_window';
+
+<form autocomplete="off" style="margin-top: 1.5em" method="POST" action="<%= $c->url_for( 'do_blog_settings' ) %>">
+    <div class="mt-3 mb-3">
+        <label for="configTitle" class="col-sm-2 col-form-label">Title</label>
+        <input type="text" class="form-control" id="configTitle" name="configTitle" value="<%= $c->stash->{form}->{title} %>">
+    </div>
+    
+    <div class="mt-3 mb-3">
+        <label for="configDesc" class="col-sm-2 col-form-label">Description</label>
+        <input type="text" class="form-control" id="configDesc" name="configDesc" value="<%= $c->stash->{form}->{desc} %>">
+    </div>
+
+    <div class="mt-3 mb-3">
+        <label for="configEmail" class="col-sm-2 col-form-label">Email</label>
+        <input type="text" class="form-control" id="configEmail" name="configEmail" value="<%= $c->stash->{form}->{email} %>">
+    </div>
+
+    <div class="mb-3">
+        <input type="submit" class="btn btn-primary btn-sm float-end" width="100%" value="Continue &rarr;">
+    </div>
+
+</form>

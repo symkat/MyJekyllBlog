@@ -1,0 +1,5 @@
+- name: Add docker support for DBIC regeneration
+  include_tasks: docker.yml
+
+- name: Update systemd files for MyJekyllBlog
+  include_tasks: myjekyllblog_service.yml

@@ -1,0 +1,5 @@
+%= include '_base/jobs/milestone', milestone => { is_complete => $job->{notes}->{is_clone_complete}, text => 'Getting copy of blog source directory.' };
+
+%= include '_base/jobs/milestone', milestone => { is_complete => $job->{notes}->{is_build_complete}, text => 'Building production HTML content with Jekyll' };
+
+%= include '_base/jobs/milestone', milestone => { is_complete => $job->{notes}->{is_deploy_complete}, text => 'Syncing HTML content with webservers' };

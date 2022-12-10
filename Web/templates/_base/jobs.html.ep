@@ -1,0 +1,30 @@
+
+%# Job Panel %
+% my $index = 0;
+% foreach my $build ( @{$jobs} ) {
+    % $index++;
+    % if ( my $build_job = $c->minion->job( $build->minion_job_id ) ) {
+        % my $job = $build_job->info;
+
+        % if ( $job->{state} eq 'finished' ) {
+            %= include '_base/jobs/finished', job => $job, index => $index, date => $build->created_at->strftime( "%F %T" )
+        
+
+        % } elsif ( $job->{state} eq 'inactive' ) {
+            %= include '_base/jobs/inactive', job => $job, date => $build->created_at->strftime( "%T %F" )
+
+        % } elsif ( $job->{state} eq 'failed' ) {
+            %= include '_base/jobs/failed', job => $job, index => $index, date => $build->created_at->strftime( "%F %T" )
+
+
+        % } elsif ( $job->{state} eq 'active' ) {
+            %= include '_base/jobs/active', job => $job, index => $index, date => $build->created_at->strftime( "%F %T" )
+
+        % } else {
+            Job in unknown state: <%= $build->{job_id} %>
+            %= $job->{state}
+        % }
+    % } else {
+        Job not found: <%= $build->{job_id} %>
+    % }
+% }

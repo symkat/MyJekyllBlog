@@ -1,0 +1,11 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+% if ( $c->minion->jobs({ states => [ 'inactive', 'active' ], notes => [ '_bid_' . $blog->id ] } )->total >= 1 ) {
+    % $c->stash->{http_refresh} = 5;
+% }
+
+%= include 'dashboard/_blog_nav', page => 'jobs'
+
+%= include '_base/status_window';
+
+%= include '_base/jobs', jobs => [ $blog->search_related( 'jobs', { }, { order_by => { -desc => 'created_at' } } )->all ] 

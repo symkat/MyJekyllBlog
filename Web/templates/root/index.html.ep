@@ -1,0 +1,18 @@
+% layout 'standard', title => 'Homepage', sb_active => 'home';
+
+<header>
+    <div class="pricing-header mt-5 mb-3 p-3 pb-md-4 mx-auto text-center">
+        <h1 class="display-4 fw-normal mb-3">Welcome To MyJekyllBlog</h1>
+        <p class="fs-5 text-muted">MyJekyllBlog is a CMS and Hosting Platform for Jekyll Blogs.</p>
+
+        <p><a href="<%= $c->url_for( 'show_register' ) %>" class="btn btn-primary btn-lg">Sign Up</a></p>
+
+        <!-- Demo Video -->
+        <iframe width="1008" height="567" src="https://www.youtube.com/embed/WqwF2kgZMAs" title="YouTube video player" 
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe>
+
+
+    </div>
+</header>
+

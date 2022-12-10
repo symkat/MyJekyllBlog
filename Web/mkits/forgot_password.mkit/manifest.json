@@ -1,0 +1,18 @@
+{
+    "renderer": "TT",
+    "header": [
+        { "To"      : "[% send_to %]" },
+        { "From"    : "MyJekyllBlog Robot <mailbot@myjekyllblog.com>" },
+        { "Subject" : "Password reset link for your MyJekyllBlog account" }
+    ],
+    "alternatives": [
+        {
+            "type": "text/plain",
+            "path": "body.txt"
+        },
+        {
+            "type": "text/html",
+            "path": "body.html"
+        }
+    ]
+}

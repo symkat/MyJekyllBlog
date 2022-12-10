@@ -1,0 +1,9 @@
+
+<div class="card mb-4 alert-warning">
+    <div class="card-header">
+        <div class="spinner-grow spinner-grow-sm" role="status">
+            <span class="visually-hidden">Waiting...</span>
+        </div>
+        Job <%= $job->{id} %>/<%= $job->{task} %> pending build.  (Queued: <%= $date %>)
+    </div>
+</div>

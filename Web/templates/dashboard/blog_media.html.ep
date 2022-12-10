@@ -1,0 +1,42 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'media'
+
+%= include '_base/status_window';
+
+<form class="row mt-3 gy-2 gx-3 align-items-center" method="POST" enctype="multipart/form-data" action="<%= $c->url_for( 'do_dashboard_blog_media' ) %>">
+    <div class="col-auto">
+        <label for="upload" class="col-form-label">Upload Images</label>
+    </div>
+    <div class="col-auto">
+        <input type="file" class="form-control" id="upload" name="upload" >
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-primary">Upload File</button>
+    </div>
+</form>
+
+<table style="border: 1px solid #ccc" class="table mt-5">
+    <tbody>
+        <tr>
+            <th class="text-nowrap">Image</th>
+            <th class="text-nowrap">Embedd Link</th>
+            <th class="text-nowrap">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        % for my $media_file ( @{$media_files} ) { 
+        <tr>
+            <td><img width="250px" src="<%= $media_file->{url} %>"></img></td>
+            <td><%= $media_file->{markdown} %></td>
+            <td>
+                <form style="margin-top: 1.5em" method="POST" action="<%= $c->url_for( 'do_dashboard_blog_media_remove' ) %>">
+                    <input type="hidden" name="file" value="<%= $media_file->{filename} %>">
+                    <input type="hidden" name="setting" value="webroot">
+                    <button type="submit" class="btn btn-sm btn-danger float-end">Delete Media File</button>
+                </form>
+            </td>
+        </tr>
+        % }
+    </tbody>
+</table>

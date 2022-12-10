@@ -1,0 +1,19 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'info'
+
+%= include '_base/status_window';
+
+<div class="row mt-3 mx-2 gx-2 gy-2">
+    <div class="col">
+        <p>Welcome to your blog manager for <a href="https://<%= $blog->domain->name %>"><%= $blog->domain->name %></a>!</p>
+        <p>You can create new blog posts on the Posts tab.</p>
+        <p>The Pages tab has stuff like your about page, or anything you want to make that isn't a blog post.</p>
+        <p>You can upload images on the Media tab, and get links for embedding in your posts.</p>
+        <p>When your blog is being built, the Build tab will have an orange marker.  You can see recent build logs there, or watch the progress of a build in real time.</p>
+        <p>On your setting page you can update setting.</p>
+        <p>All the changes to your blog will be shown on the History tab.  If you make any mistake, you can undo it with the click of a button there.</p>
+
+        <p><span class="fw-bold">Thank you</span> for using MyJekyllBlog.</p>
+    </div>
+</div>

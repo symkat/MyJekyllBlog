@@ -1,0 +1,7 @@
+- name: Setup environment for manager user
+  include_tasks:
+    file: manager_user.yml
+
+- name: Setup the web application
+  include_tasks: 
+    file: webapp.yml

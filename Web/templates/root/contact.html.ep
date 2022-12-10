@@ -1,0 +1,10 @@
+% layout 'standard', title => 'Contact', sb_active => 'contact';
+
+<header>
+    <div class="pricing-header mt-5 mb-3 p-3 pb-md-4 mx-auto text-center">
+        <h1 class="display-4 fw-normal mb-3">Let's Chat</h1>
+        <p class="fs-5 text-muted">
+            hello@myjekyllblog.com
+        </p>
+    </div>
+</header>

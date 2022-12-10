@@ -1,0 +1,32 @@
+- name: Install packages for webserver support
+  apt:
+    name: [
+      'nginx',
+      'certbot',
+      'python3-certbot-nginx',
+    ]
+    state: present
+
+- name: Start & enable nginx
+  service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: "Install /etc/nginx/sites-enabled/{{ domain_name.panel }}"
+  template:
+    src: "{{ role_path }}/templates/nginx-domain.j2"
+    dest: "/etc/nginx/sites-enabled/{{ domain_name.panel }}"
+    force: no
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart nginx
+
+- name: Setup SSL Certificates
+  shell: certbot run --nginx -d {{ domain_name.panel }} {{ '-d www.' + domain_name.panel if redirect_www }} --agree-tos --register-unsafely-without-email
+  args:
+    creates: /etc/letsencrypt/live/{{ domain_name.panel }}/cert.pem
+  notify:
+    - Restart nginx

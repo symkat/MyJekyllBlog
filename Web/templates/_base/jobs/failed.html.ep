@@ -1,0 +1,24 @@
+
+<div class="card mt-4">
+    <div class="card-header alert-warning">
+        %= include '_base/_svg/failed'
+        Job <%= $job->{id} %>/<%= $job->{task} %> failed.  (Queued: <%= $date %>)
+        <button class="btn" data-bs-toggle="collapse" data-bs-target="#job_window_<%= $job->{id} %>">
+            %= include '_base/_svg/chevron'
+        </button>
+    </div>
+    <div id="job_window_<%= $job->{id} %>" class="card-body <%= $index == 1 ?  '' : 'collapse' %>">
+        
+        %= include '_base/jobs/_milestones/' . $job->{notes}->{_job_template}, job => $job
+
+        <hr />
+
+        % if ( ! ref $job->{result} ) {
+            <p class="text-danger"><strong>System Error: <%= $job->{result} %></strong></p>
+        % } else {
+            <p class="text-danger"><strong>Error: <%= $job->{result}{error} %></strong></p>
+        % }
+
+        %= include '_base/jobs/view_logs', job => $job
+    </div>
+</div>

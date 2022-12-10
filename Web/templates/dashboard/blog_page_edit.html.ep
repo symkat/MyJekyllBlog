@@ -1,0 +1,30 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'page-edit'
+
+%= include '_base/status_window';
+
+<p class="mt-3 fs-4" >Editing <span class="fw-bolder"><%= $blog_page->rel_path %></span></p>
+
+<form autocomplete="off" method="POST" action="<%= $c->url_for( 'do_dashboard_blog_page_edit' ) %>">
+    <input type="hidden" name="file" value="<%= $blog_page->rel_path %>">
+    
+    <div class="mb-3">
+        <label for="pageHeaders" class="form-label">
+            Page Headers - 
+            See <a target="_blank" href="https://jekyllrb.com/docs/front-matter/">Jekyll Front Matter Docs</a>
+        </label>
+        <textarea class="form-control" id="pageHeaders" name="pageHeaders" rows="5"><%= $blog_page->headers_as_string %></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="pageContent" class="form-label">Page Content</label>
+        <textarea class="form-control" id="markdown_editor_panel" name="pageContent" rows="25"><%= $blog_page->markdown %></textarea>
+    </div>
+
+    <div class="mb-3">
+        <input type="submit" class="btn btn-primary btn-sm float-end" width="100%" value="Update Page">
+    </div>
+
+</form>
+

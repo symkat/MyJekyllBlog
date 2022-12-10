@@ -1,0 +1,44 @@
+- name: Update all packages to their latest version
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Install packages for webserver support
+  apt:
+    name: [
+      'nginx',
+      'rsync', # for letsencrypt-cert-push
+    ]
+    state: present
+
+- name: "Install /etc/nginx/sites-available/default"
+  template:
+    src: "{{ role_path }}/templates/default.j2"
+    dest: "/etc/nginx/sites-available/default"
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart nginx
+
+- name: Generate /etc/nginx/ssl-dhparams.pem
+  shell: openssl dhparam -out /etc/nginx/ssl-dhparams.pem 4096
+  args:
+    creates: /etc/nginx/ssl-dhparams.pem
+
+- name: Start & enable nginx
+  service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Get public key contents
+  set_fact:
+    public_key: "{{ lookup('file', inventory_dir + '/files/ssh/id_rsa.pub' ) }}"
+
+- name: "Install ssh public key for builder/certbot"
+  lineinfile:
+    path:   "/root/.ssh/authorized_keys"
+    line:   "{{ public_key }}"
+    search_string: "{{ public_key }}"
+    state: present

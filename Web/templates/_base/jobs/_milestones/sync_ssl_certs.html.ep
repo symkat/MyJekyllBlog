@@ -1,0 +1,1 @@
+%= include '_base/jobs/milestone', milestone => { is_complete => $job->{notes}->{is_sync_done}, text => 'Syncing SSL certificates with web servers' };

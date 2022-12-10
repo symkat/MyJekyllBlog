@@ -1,0 +1,43 @@
+% layout 'standard', title => 'Admin Panel', sb_active => 'admin';
+
+%= include 'admin/_nav', page => 'servers'
+
+%= include '_base/status_window';
+
+<form class="row mt-3 gy-2 gx-3 align-items-center" method="POST" enctype="multipart/form-data" action="<%= $c->url_for( 'do_admin_server' ) %>">
+    <div class="col-auto">
+        <label for="upload" class="col-form-label">Server FQDN</label>
+    </div>
+    <div class="col-auto">
+        <input type="text" class="form-control" id="server_fqdn" name="server_fqdn" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-primary">Add Server</button>
+    </div>
+</form>
+
+<hr />
+
+<table style="border: 1px solid #ccc" class="table">
+    <tbody>
+        <tr>
+            <th class="text-nowrap">ID</th>
+            <th class="text-nowrap">FQDN</th>
+            <th class="text-nowrap">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        % for my $server ( @{$servers} ) { 
+        <tr>
+            <td><%= $server->id  %></td>
+            <td><%= $server->hostname  %></td>
+            <td>
+                <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_server_remove' ) %>">
+                    <input type="hidden" name="sid" value="<%= $server->id %>">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete Server</button>
+                </form>
+            </td>
+        </tr>
+        % }
+    </tbody>
+</table>

@@ -1,0 +1,174 @@
+#==
+# This is an example inventory file to setup an instance of MyJekyllBlog.
+#
+# SENSITIVE variables should be stored in the vault.yml file and then encrypted
+# with ansible-vault.
+# 
+# ansible-vault encrypt --vault-password-file .vault_password env/example/vault.yml
+#
+# To edit these values in the future, you can edit the file with the following command:
+#
+# ansible-vault edit --vault-password-file .vault_password env/example/vault.yml
+#
+# To run the playbooks, use the following:
+# ansible-playbook -i env/example/inventory.yml --vault-password-file .vault_password -e @env/example/vault.yml site.yml
+# 
+#==
+
+all:
+  vars:
+    # This is the admin user account that will be created for the panel.
+    admin_user:
+      name:  Manager
+      email: manager@example.com
+      pass: "{{ vault_admin_user_pass }}"
+
+    # This is the git repository that contains MyJekyllBlog itself.  It will be checked out
+    # during the installation process on the various machines that need it.
+    repo: https://git.modfoss.com/symkat/MyJekyllBlog.git
+
+
+    # These are hostnames of specific services.
+    #
+    # root should be set to the top level domain for everything, it will be used to configure
+    # ssh and git for the manager user account.
+    #
+    # panel, store, and certbot should all be set to the hostnames for their services.  There should
+    # never be more than one of each server type.
+    domain_name:
+      root:    example.com
+      panel:   panel.example.com
+      store:   store.example.com
+      certbot: certbot.example.com
+    
+    # These are database configurations.
+    #
+    # For the store server, the database name, user, and pass will be used to create
+    # the psql database and user account.
+    #
+    # For any server that includes mjb-role-webapp, they will be used for credentials in /etc/mjb.yml
+    databases:
+      mjb:
+        name: mjb
+        user: mjb
+        pass: "{{ vault_databases_mjb_pass }}"
+        host: 192.168.216.75
+      minion:
+        name: minion
+        user: minion
+        pass: "{{ vault_databases_minion_pass }}"
+        host: 192.168.216.75
+      gitea:
+        name: gitea
+        user: gitea
+        pass: "{{ vault_databases_gitea_pass }}"
+        host: 127.0.0.1
+
+    # SMTP Credentials
+    #
+    # These credentials will be used by Gitea for its SMTP configuration,
+    # and by the panel for transactional email with MJB::Web::Plugin::Email.
+    smtp:
+      host: smtp.mail-provider.com
+      from: mailbot@example.com
+      user: apikey
+      pass: "{{ vault_smtp_pass }}"
+
+    panel_config:
+      # If the panel should use plausible for metrics.
+      use_plausible: 0
+
+      # This repo is the initial repository cloned when somebody creates a new blog.
+      jekyll_init_repo: git@store.example.com:manager/jekyll-default.git
+
+      # This should be the link to an org on gitea on the store server, the repository will
+      # be completed with the domain name, like :mjb/domain.com.git
+      store_repo_base: git@store.example.com:mjb/
+    
+      # These secrets are used for the session encryption
+      secrets: "{{ vault_panel_config_secrets }}"
+      
+      # There are three user registration systems:
+      #
+      # 1. open allows anyone to register an account, if they can access the website.
+      # 2. invite allows anyone to register an account, if they can access the website
+      #    and have an invite code that is provided to them by an admin.
+      # 3. stripe allows anyone to register an account, if they can make a subscription
+      #    with stripe.
+      #
+      # Any registration system that is enabled can be used.
+      #
+      # Whichever system is set to the default will be what is used when users click
+      # 'register' on the website.
+      #
+      # Valid values for default are 'stripe', 'invite', 'open'.
+      register:
+        default: stripe
+        enable_stripe: 1
+        enable_invite: 1
+        enable_open: 0
+
+# Configuration specific to the panel server.
+panel:
+  hosts:
+    panel.example.com:
+      redirect_www: false
+
+# Configuration specific to the build servers.
+buildservers:
+  hosts:
+    build.example.com:
+
+# Configuration specific to the webservers.
+webservers:
+  hosts:
+    web-west.example.com:
+    web-east.example.com:
+
+# Configuration specific to the webservers.
+certbot:
+  hosts:
+    certbot.example.com:
+      # To use certbot for wildcard ssl certs, you must use a DNS challenge.  These are
+      # the credentials for the linode dns challenge.
+      linode_dns_credentials: "{{ vault_linode_dns_credentials }}"
+
+# Configuration specific to the store server.
+store:
+  hosts:
+    store.example.com:
+      # This section configures the postgresql database that will run on the store server.
+      # 
+      # The bind_address accepts an IP address for psql to bind to.  The PSQL configuration will
+      # bind to this IP address, and 127.0.0.1.
+      #
+      # Each IP address in allow_addresses will be added to the PSQL HBA file.  This should contain
+      # all of the IP addresses of the panel, build, store and certbot servers so each may use the
+      # databases.
+      database:
+        bind_address: 192.168.216.75
+        allow_addresses:
+          - 192.168.213.90  # panel.example.com
+          - 192.168.188.226 # build.example.com
+          - 192.168.216.75  # store.example.com
+          - 192.168.163.105 # certbot.example.com
+
+      # This section configures Gitea on the store server.
+      gitea:
+        # The user, email and pass will be used to create an initial user on the Gitea
+        # instance installed on the store server.
+        user: manager
+        email: manager@example.com
+        pass: "{{ vault_gitea_pass }}"
+
+        # This is a token that Gitea needs to secure the installation.
+        # You can generate this secret by running, from the ansible directory:
+        #
+        # ./roles/mjb-profile-store/files/gitea-1.17.1-linux-amd64 generate secret INTERNAL_TOKEN
+        internal_token: "{{ vault_internal_token }}"
+
+        # This is a token that Gitea needs to secure the installation.
+        # You can generate this secret by running, from the ansible directory:
+        #
+        # ./roles/mjb-profile-store/files/gitea-1.17.1-linux-amd64 generate secret JWT_SECRET
+        jwt_token: "{{ vault_jwt_token }}"

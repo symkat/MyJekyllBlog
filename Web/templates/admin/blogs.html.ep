@@ -1,0 +1,35 @@
+% layout 'standard', title => 'Admin Panel', sb_active => 'admin';
+
+%= include 'admin/_nav', page => 'blogs'
+
+%= include '_base/status_window';
+
+% if ( $blogs ) {
+    <table style="border: 1px solid #ccc" class="table">
+        <tbody>
+            <tr>
+                <th class="text-nowrap">Domain</th>
+                <th class="text-nowrap">Owner</th>
+                <th class="text-nowrap">Created</th>
+                <th class="text-nowrap">User View</th>
+            </tr>
+        </thead>
+        <tbody>
+            % for my $blog ( @{$blogs} ) { 
+            <tr>
+                <td><a target="_blank" href="https://<%= $blog->domain->name %>"><%= $blog->domain->name %></a></td>
+                <td><a href="<%= $c->url_for( 'show_admin_person', { id => $blog->person->id } ) %>"><%= $blog->person->name %></a></td>
+                <td><%= $blog->created_at->strftime( "%F %T" )  %></td>
+                <td>
+                    <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_become' ) %>">
+                        <input type="hidden" name="uid" value="<%= $blog->person->id %>">
+                        <input type="hidden" name="bid" value="<%= $blog->id %>">
+                        <input type="hidden" name="url" value="<%= $c->url_for %>">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Manage Blog</button>
+                    </form>
+                </td>
+            </tr>
+            % }
+        </tbody>
+    </table>
+% }

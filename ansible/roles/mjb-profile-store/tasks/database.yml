@@ -1,0 +1,60 @@
+- name: Install packages to support postgres
+  apt:
+    name: [
+      'libssl-dev',
+      'libpq-dev',
+      'libz-dev',
+      'libexpat1-dev',
+      'postgresql-client',
+      'postgresql-contrib',
+      'postgresql',
+      'python3-psycopg2',
+    ]
+    state: present
+
+- name: Start & enable postgres
+  service:
+    name: postgresql
+    state: started
+    enabled: true
+
+- name: Create database users
+  postgresql_user:
+    name: "{{ item.value.user }}"
+    password: "{{ item.value.pass }}"
+    state: present
+  become_user: postgres
+  become: true
+  with_dict: "{{ databases }}"
+
+- name: Create databases
+  postgresql_db:
+    name: "{{ item.value.name }}"
+    owner: "{{ item.value.user }}"
+    state: present
+  become_user: postgres
+  become: true
+  with_dict: "{{ databases }}"
+
+- name: Add auth lines to pgsql hba config
+  postgresql_pg_hba:
+    dest: /etc/postgresql/13/main/pg_hba.conf
+    contype: host
+    source: "{{ item }}/32" 
+    method: md5
+    create: true
+  with_items: "{{ database.allow_addresses }}"
+  notify: Restart postgresql
+
+- name: "Bind PSQL to localhost and {{ database.bind }}"
+  lineinfile:
+    path: /etc/postgresql/13/main/postgresql.conf
+    regexp: '^listen_addresses '
+    insertafter: '^#listen_addresses'
+    line: "listen_addresses = 'localhost,{{ database.bind_address }}'"
+  notify: Restart postgresql
+
+- name: "Restart PSQL if notified."
+  meta: flush_handlers
+
+

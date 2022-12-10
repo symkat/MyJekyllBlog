@@ -1,0 +1,12 @@
+[Unit]
+Description=Stripe Backend Server
+After=network.target
+
+[Service]
+User=manager
+Group=manager
+WorkingDirectory=/home/manager/mjb/Web/script
+ExecStart=/usr/bin/gunicorn --workers 3 --bind 127.0.0.1:8000 stripe-backend:app
+
+[Install]
+WantedBy=multi-user.target

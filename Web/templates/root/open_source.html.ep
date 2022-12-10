@@ -1,0 +1,5 @@
+% layout 'standard', title => 'Open Source', sb_active => 'open_source';
+
+<h2 class="mt-5 display-6 mb-4">Open Source</h2>
+
+<p class="fs-5 text-muted">MyJekyllBlog is an open-source project.  You can find the latest version of the source code, instructions, and documentation at <a target="_blank" href="https://github.com/symkat/MyJekyllBlog">MyJekyllBlog's GitHub</a></p>

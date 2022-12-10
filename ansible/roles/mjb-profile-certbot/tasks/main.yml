@@ -1,0 +1,92 @@
+- name: Update all packages to their latest version
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Install packages for webserver support
+  apt:
+    name: [
+      'certbot',
+      'python3-certbot-dns-linode',
+      'rsync',
+    ]
+    state: present
+
+- name: Support running MJB::Web
+  include_role:
+    name: mjb-role-webapp
+
+- name: Allow manager to have sudo access for certbot
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^manager'
+    line: 'manager ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: Install mjb.certbot.service file.
+  copy:
+    dest: /etc/systemd/system/mjb.certbot.service
+    src: "{{ role_path }}/files/mjb.certbot.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start & enable mjb.certbot
+  service:
+    name: mjb.certbot
+    state: started
+    enabled: true
+
+- name: Create /etc/letsencrypt/.secrets/
+  file:
+    state: directory
+    path: /etc/letsencrypt/.secrets
+    owner: root
+    group: root
+    mode: 0750
+
+- name: Create /etc/letsencrypt/.secrets/linode.ini
+  file:
+    state: touch
+    path:  /etc/letsencrypt/.secrets/linode.ini
+    owner: root
+    group: root
+    mode: 0640
+
+- name: "Populatge linode secrets"
+  lineinfile:
+    path: /etc/letsencrypt/.secrets/linode.ini
+    line: "{{ item }}"
+  with_items: "{{ linode_dns_credentials }}"
+
+- name: Create keypair for syncing
+  openssh_keypair:
+    path: "/root/.ssh/id_rsa"
+    type: rsa
+    size: 4096
+    owner: root
+    group: root
+    state: present
+    force: no
+
+- name: Get private key from host
+  fetch:
+    src: /root/.ssh/id_rsa
+    dest: "{{ inventory_dir }}/files/ssh/id_rsa"
+    flat: true
+
+- name: Get public key from host
+  fetch:
+    src: /root/.ssh/id_rsa.pub
+    dest: "{{ inventory_dir }}/files/ssh/id_rsa.pub"
+    flat: true
+
+- name: "Install SSH Key for manager to use rsync to webservers"
+  copy:
+    dest: /home/manager/.ssh/id_rsa
+    src: "{{ inventory_dir }}/files/ssh/id_rsa"
+    owner: manager
+    group: manager
+    mode: 0600

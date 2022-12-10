@@ -1,0 +1,8 @@
+- name: Configure Panel server for development 
+  remote_user: root
+  hosts: panel
+  vars:
+    ansible_ssh_common_args: -oControlMaster=auto -oControlPersist=60s -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no
+  roles:
+    - mjb-overlay-devel
+

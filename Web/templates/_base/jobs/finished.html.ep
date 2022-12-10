@@ -1,0 +1,21 @@
+
+<div class="card mt-4">
+    <div class="card-header alert-success">
+        %= include '_base/_svg/checkmark'
+
+        Job <%= $job->{id} %>/<%= $job->{task} %> completed successfully.  (Queued: <%= $date %>)
+
+        <button class="btn" data-bs-toggle="collapse" data-bs-target="#job_window_<%= $job->{id} %>">
+            %= include '_base/_svg/chevron'
+        </button>
+
+    </div>
+    <div id="job_window_<%= $job->{id} %>" class="card-body <%= $index == 1 ?  '' : 'collapse' %>">
+        %= include '_base/jobs/_milestones/' . $job->{notes}->{_job_template}, job => $job
+
+        <hr />
+        
+        %= include '_base/jobs/view_logs', job => $job
+
+    </div>
+</div>

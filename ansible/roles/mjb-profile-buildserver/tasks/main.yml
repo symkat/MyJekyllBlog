@@ -1,0 +1,40 @@
+---
+- name: Update all packages to their latest version
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Install packages for build support
+  apt:
+    name: [
+      'podman',
+      'rsync',
+    ]
+    state: present
+
+- name: Support running MJB::Web
+  include_role:
+    name: mjb-role-webapp
+
+- name: "Install SSH Key for manager to use rsync to webservers"
+  copy:
+    dest: /home/manager/.ssh/id_rsa
+    src: "{{ inventory_dir }}/files/ssh/id_rsa"
+    owner: manager
+    group: manager
+    mode: 0600
+
+- name: Install mjb.worker.service file.
+  copy:
+    dest: /etc/systemd/system/mjb.worker.service
+    src: "{{ role_path }}/files/mjb.worker.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start & enable mjb.worker
+  service:
+    name: mjb.worker
+    state: started
+    enabled: true

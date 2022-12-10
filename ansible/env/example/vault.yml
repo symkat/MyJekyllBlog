@@ -1,0 +1,13 @@
+vault_admin_user_pass:        'password you will use to login to the admin account on the panel'
+vault_databases_mjb_pass:     'some password' 
+vault_databases_minion_pass:  'some password'
+vault_databases_gitea_pass:   'some password'
+vault_linode_dns_credentials: 'some password'
+  - 'dns_linode_key = api-key-from-linode, for wildcard ssl'
+  - 'dns_linode_version = 4'
+vault_internal_token: 'see docs in inventory.yml for how to generate this' 
+vault_jwt_token: 'see docs in inventory.yml for how to generate this'
+vault_panel_config_secrets:
+  - 'some really long string'
+vault_smtp_pass: 'your smtp provider password'
+vault_gitea_pass: 'the password to set for the managers gitea account'

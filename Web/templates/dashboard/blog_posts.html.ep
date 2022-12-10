@@ -1,0 +1,43 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'posts'
+
+%= include '_base/status_window';
+
+<div class="row mt-3 mb-3">
+    <div class="col">
+        <div class="float-end">
+            <a style="text-decoration: none;" href="<%= $c->url_for( 'show_dashboard_blog_post' ) %>">
+                <span style="color: green; width: 32px; height: 32px;" data-feather="plus-circle"></span>
+                <cpan style="color: black; vertical-align: 30%; font-size: 16px">New Post</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<table style="border: 1px solid #ccc" class="table">
+    <tbody>
+        <tr>
+            <th class="text-nowrap">Title</th>
+            <th class="text-nowrap">Date</th>
+            <th class="text-nowrap">Edit</th>
+            <th class="text-nowrap">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        % for my $post ( @{$blog_posts} ) { 
+        <tr>
+            <td><a href="<%= $c->url_for( 'show_dashboard_blog', { id => $blog->id } ) %>"><%= $post->headers->{title} %></a></td>
+            <td><a href="<%= $c->url_for( 'show_dashboard_blog', { id => $blog->id } ) %>"><%= $post->headers->{date} %></a></td>
+            <td><a class="btn btn-sm btn-primary" href="<%= $c->url_for( 'show_dashboard_blog_post_edit', { id => $blog->id } )->query( mdfile => $post->filename ) %>">Edit Post</a></td>
+            <td>
+                <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_dashboard_blog_post_remove' ) %>">
+                    <input type="hidden" name="file" value="<%= $post->filename %>">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete Post</button>
+                </form>
+            </td>
+        </tr>
+        % }
+    </tbody>
+</table>
+

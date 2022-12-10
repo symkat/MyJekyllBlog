@@ -1,0 +1,71 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'admin';
+            
+%= include 'admin/_nav', page => 'alerts'
+
+%= include '_base/status_window';
+
+% for my $alert ( @{$c->stash->{alerts}} ) {
+    <div class="card mt-4">
+        <div class="card-header alert-primary">
+            % if ( $alert->is_read == 1 ) {
+                %= include '_base/_svg/envelope-open'
+            % } else { 
+                %= include '_base/_svg/envelope'
+            % }
+
+            Message from <span class="fw-bold"><%= $alert->source %></span> on <%= $alert->created_at->strftime( "%F %T" ) %>
+
+            <button class="btn" data-bs-toggle="collapse" data-bs-target="#alert_window_<%= $alert->id %>">
+                %= include '_base/_svg/chevron'
+            </button>
+        </div>
+        <div id="alert_window_<%= $alert->id %>" class="card-body <%= $alert->is_read == 1 ?  'collapse' : '' %>">
+            <div class="row">
+                % if ( $alert->is_read ) { 
+                <div class="col-auto">
+                    <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_alert_unread' ) %>">
+                        <input type="hidden" name="nid" value="<%= $alert->id %>">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Mark Unread</button>
+                    </form>
+                </div>
+                % } else { 
+                <div class="col-auto">
+                    <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_alert_read' ) %>">
+                        <input type="hidden" name="nid" value="<%= $alert->id %>">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Mark Read</button>
+                    </form>
+                </div>
+                % }
+                <div class="col-auto">
+                    <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_alert_remove' ) %>">
+                        <input type="hidden" name="nid" value="<%= $alert->id %>">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="mt-3 row">
+                <div class="col">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>From</th>
+                            <td><%= $alert->source %></td>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <td><%= $alert->created_at->strftime( "%F %T" ) %></td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td><%= $alert->is_read ? 'Read' : 'Unread' %></td>
+                        </tr>
+                    </table>
+                    <hr />
+                    <p><%= $alert->content %></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+% }
+

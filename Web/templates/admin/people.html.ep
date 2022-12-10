@@ -1,0 +1,32 @@
+% layout 'standard', title => 'Admin Panel', sb_active => 'admin';
+
+%= include 'admin/_nav', page => 'people'
+
+%= include '_base/status_window';
+
+<table style="border: 1px solid #ccc" class="table">
+    <tbody>
+        <tr>
+            <th class="text-nowrap">Name</th>
+            <th class="text-nowrap">Email Address</th>
+            <th class="text-nowrap">Created</th>
+            <th class="text-nowrap">Become User</th>
+        </tr>
+    </thead>
+    <tbody>
+        % for my $user ( @{$people} ) { 
+        <tr>
+            <td><a href="<%= $c->url_for( 'show_admin_person', { id => $user->id } ) %>"><%= $user->name %></a></td>
+            <td><%= $user->email %></td>
+            <td><%= $user->created_at->strftime( "%F" ) %></td>
+            <td>
+                <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_become' ) %>">
+                    <input type="hidden" name="uid" value="<%= $user->id %>">
+                    <input type="hidden" name="url" value="<%= $c->url_for %>">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Login</button>
+                </form>
+            </td>
+        </tr>
+        % }
+    </tbody>
+</table>

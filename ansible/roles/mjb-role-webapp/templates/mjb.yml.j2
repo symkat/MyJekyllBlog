@@ -1,0 +1,37 @@
+---
+jekyll_init_repo: {{ panel_config.jekyll_init_repo }}
+store_repo_base: {{ panel_config.store_repo_base }}
+
+database:
+  mjb:    postgresql://{{ databases.mjb.user }}:{{ databases.mjb.pass }}@{{ databases.mjb.host }}/{{ databases.mjb.name }}
+  minion: postgresql://{{ databases.minion.user }}:{{ databases.minion.pass }}@{{ databases.minion.host }}/{{ databases.minion.name }}
+
+domain_for_links: {{ domain_name.panel }}
+
+use_plausible: {{ panel_config.use_plausible }}
+
+smtp:
+  host: {{ smtp.host }}
+  from: {{ smtp.from }}
+  sasl_username: {{ smtp.user }}
+  sasl_password: {{ smtp.pass }}
+
+secrets:
+{% for secret in panel_config.secrets %}
+  - {{ secret }}
+{% endfor %}
+
+stripe:
+    enable: {{ panel_config.stripe.enable }}
+    lookup_key: {{ panel_config.stripe.lookup_key }}
+    backend: {{ panel_config.stripe.backend }}
+    api_key: {{ panel_config.stripe.api_key }}
+    return_domain: https://{{ domain_name.panel }}
+
+register:
+  # If a user clicks 'register' which system should they go to?
+  default: {{ panel_config.register.default }}
+  # Valid registration systems: stripe, invite, open
+  enable_stripe: {{ panel_config.register.enable_stripe }}
+  enable_invite: {{ panel_config.register.enable_invite }}
+  enable_open: {{ panel_config.register.enable_open }}

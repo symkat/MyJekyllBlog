@@ -1,0 +1,16 @@
+requires 'Minion';
+requires 'Mojolicious';
+requires 'Mojo::Pg';
+requires 'Mojo::File';
+requires 'DateTime';
+requires 'DateTime::Format::Pg';
+requires 'Try::Tiny';
+
+# For MJB::Web::Plugin::Email
+requires 'Email::Sender::Simple';
+requires 'Email::Sender::Transport::SMTP';
+requires 'Email::MIME::Kit';
+requires 'Email::MIME::Kit::Renderer::TT';
+requires 'MIME::Base64';
+requires 'Authen::SASL';
+

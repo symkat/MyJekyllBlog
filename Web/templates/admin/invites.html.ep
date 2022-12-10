@@ -1,0 +1,57 @@
+% layout 'standard', title => 'Admin Panel', sb_active => 'admin';
+
+%= include 'admin/_nav', page => 'invites'
+
+%= include '_base/status_window';
+
+<form class="row mt-3 gy-2 gx-3 align-items-center" method="POST" enctype="multipart/form-data" action="<%= $c->url_for( 'do_admin_invite' ) %>">
+    <div class="col-auto">
+        <label for="upload" class="col-form-label">Invite Code</label>
+    </div>
+
+    <div class="col-auto">
+        <input type="text" class="form-control" id="code" name="code" >
+    </div>
+
+    <div class="col-auto">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="is_multi_use" name="is_multi_use">
+            <label class="form-check-label" for="is_multi_use">Allow multiple use of this code</label>
+        </div>
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-primary">Create Code</button>
+    </div>
+</form>
+
+<table style="border: 1px solid #ccc" class="mt-3 table">
+    <tbody>
+        <tr>
+            <th class="text-nowrap">ID</th>
+            <th class="text-nowrap">Code</th>
+            <th class="text-nowrap">One time use?</th>
+            <th class="text-nowrap">Is active?</th>
+            <th class="text-nowrap">Created</th>
+            <th class="text-nowrap">Remove</th>
+        </tr>
+    </thead>
+    <tbody>
+        % for my $invite ( @{$invites} ) { 
+        <tr>
+            <td><%= $invite->id %></td>
+            <td><%= $invite->code %></td>
+            <td><%= $invite->is_one_time_use %></td>
+            <td><%= $invite->is_active %></td>
+            <td><%= $invite->created_at->strftime( "%F" ) %></td>
+            <td>
+                <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_invite_remove' ) %>">
+                    <input type="hidden" name="iid" value="<%= $invite->id %>">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                </form>
+            </td>
+        </tr>
+        % }
+    </tbody>
+</table>
+

@@ -1,0 +1,9 @@
+% layout 'standard', title => 'About', sb_active => 'about';
+
+<h2 class="mt-5 display-6 mb-4">What's This?</h2>
+
+<p class="fs-5 text-muted">This is MyJekyllBlog: it’s a multi-user CMS and hosting platform for Jekyll blogs.</p>
+
+<p class="fs-5 text-muted">Multi-user means many different people can create accounts and make their own blogs.  The CMS feature means that those same people can create posts, pages, upload media for their blogs or edit and delete those same kinds of things.  With the included hosting platform, these blogs can be be displayed directly to people on the Internet.</p>
+
+<p class="fs-5 text-muted">MyJekyllBlog is an open-source project.  You can find the latest version of the source code, instructions, and documentation at <a target="_blank" href="https://github.com/symkat/MyJekyllBlog">MyJekyllBlog's GitHub</a></p>

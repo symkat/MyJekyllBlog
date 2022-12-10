@@ -1,0 +1,54 @@
+% layout 'standard', title => 'Admin Panel', sb_active => 'admin';
+
+%= include 'admin/_nav', page => 'domains'
+
+%= include '_base/status_window';
+
+<form class="row mt-3 gy-2 gx-3 align-items-center" method="POST" enctype="multipart/form-data" action="<%= $c->url_for( 'do_admin_domain' ) %>">
+    <div class="col-auto">
+        <label for="upload" class="col-form-label">Domain FQDN</label>
+    </div>
+    <div class="col-auto">
+        <input type="text" class="form-control" id="domain_fqdn" name="domain_fqdn" />
+    </div>
+    <div class="col-auto">
+        <label for="ssl_challenge" class="col-form-label">SSL Challenge</label>
+    </div>
+    <div class="col-auto">
+        <select name="ssl_challenge" class="form-select" aria-label="Select Domain Name">
+            <option name="ssl_challenge" value="http">HTTP</option>
+            <option name="ssl_challenge" value="dns-linode">DNS - Linode</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-primary">Add Hosted Domain</button>
+    </div>
+</form>
+
+<hr />
+
+<table style="border: 1px solid #ccc" class="table">
+    <tbody>
+        <tr>
+            <th class="text-nowrap">ID</th>
+            <th class="text-nowrap">FQDN</th>
+            <th class="text-nowrap">SSL Challenge</th>
+            <th class="text-nowrap">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        % for my $domain ( @{$domains} ) { 
+        <tr>
+            <td><%= $domain->id %></td>
+            <td><%= $domain->name %></td>
+            <td><%= $domain->letsencrypt_challenge %></td>
+            <td>
+                <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_domain_remove' ) %>">
+                    <input type="hidden" name="did" value="<%= $domain->id %>">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete Domain</button>
+                </form>
+            </td>
+        </tr>
+        % }
+    </tbody>
+</table>

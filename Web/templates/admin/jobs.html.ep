@@ -1,0 +1,25 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'admin';
+            
+% if ( $c->minion->jobs({ states => [ 'inactive', 'active' ], notes => [ '_bid_0' ] } )->total >= 1 ) {
+    % $c->stash->{http_refresh} = 5;
+% }
+            
+%= include 'admin/_nav', page => 'jobs'
+
+%= include '_base/status_window';
+
+<div class="mt-4 row">
+    <div class="col col-auto">
+        <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_update_ssl' ) %>">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Update SSL Certs</button>
+        </form>
+    </div>
+    <div class="col col-auto">
+        <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_admin_sync_ssl' ) %>">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Sync SSL Certs</button>
+        </form>
+    </div>
+</div>
+
+%= include '_base/jobs', jobs => [ $c->db->admin_jobs( { }, { order_by => { -desc => 'created_at' } } )->all ] 
+

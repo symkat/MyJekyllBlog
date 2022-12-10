@@ -1,0 +1,20 @@
+- name: Install service file for mjb.dev-panel
+  copy:
+    dest: /etc/systemd/system/mjb.dev-panel.service
+    src: "{{ role_path }}/files/mjb.dev-panel.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Stop and disable mjb.panel service
+  service:
+    name: mjb.panel
+    state: stopped
+    enabled: no
+
+
+- name: Start and enable the mjb.dev-panel service
+  service:
+    name: mjb.dev-panel
+    state: started
+    enabled: yes

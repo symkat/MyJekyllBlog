@@ -1,0 +1,62 @@
+<nav aria-label="breadcrumb" class="mt-3 mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%= $c->url_for( 'show_admin' ) %>">Admin Panel</a></li>
+        <li class="breadcrumb-item active"><%= $page %></li>
+    </ol>
+</nav>
+
+<div class="mt-4 row">
+    <div class="col">
+        <ul class="mt-3 nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link <%= $page eq 'people' ? 'active' : '' %>" href="<%= $c->url_for( 'show_admin_people' ) %>"><span data-feather="users"></span> People</a>
+            </li>
+
+            % if ( $page eq 'person' ) {
+                <li class="nav-item">
+                    <a class="nav-link active" href="#"><span data-feather="user"></span> Person</a>
+                </li>
+            % }
+            
+            <li class="nav-item">
+                <a class="nav-link <%= $page eq 'blogs' ? 'active' : '' %>" href="<%= $c->url_for( 'show_admin_blogs' ) %>"><span data-feather="layout"></span> Blogs</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link <%= $page eq 'invites' ? 'active' : '' %>" href="<%= $c->url_for( 'show_admin_invites' ) %>"><span data-feather="key"></span> Invites</a>
+            </li>
+
+            <div class="flex-grow-1 text-right"></div>
+
+            <li class="nav-item">
+                <a class="nav-link <%= $page eq 'jobs' ? 'active' : '' %>" href="<%= $c->url_for( 'show_admin_jobs' ) %>">
+                    % if ( $page ne 'jobs' && $c->minion->jobs({ states => [ 'inactive', 'active' ], notes => [ '_bid_0' ] } )->total >= 1 ) {
+                        <div class="spinner-grow spinner-grow-sm text-warning" role="status">
+                            <span class="visually-hidden">Jobs Running</span>
+                        </div>
+                    % }
+                    <span data-feather="activity"></span> Jobs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= $page eq 'alerts' ? 'active' : '' %>" href="<%= $c->url_for( 'show_admin_alerts' ) %>">
+                    % my $unread_count = $c->db->system_notes( { is_read => 0 } )->count;
+                    % if ( $unread_count ) {
+                        <span class="badge rounded-pill bg-danger">
+                            <%= $unread_count %>
+                        </span>
+                    % } else {
+                        <span data-feather="thumbs-up"></span> 
+                    % }
+                    Alerts
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= $page eq 'servers' ? 'active' : '' %>" href="<%= $c->url_for( 'show_admin_servers' ) %>"><span data-feather="server"></span> Servers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= $page eq 'domains' ? 'active' : '' %>" href="<%= $c->url_for( 'show_admin_domains' ) %>"><span data-feather="at-sign"></span> Domains</a>
+            </li>
+        </ul>
+    </div>
+</div>
