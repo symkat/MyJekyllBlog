@@ -6,12 +6,13 @@
 
 <form autocomplete="off" method="POST" action="<%= $c->url_for( 'do_dashboard_blog_post_edit' ) %>">
     <input type="hidden" name="mdfile" value="<%= $post->filename %>">
+    <input type="hidden" name="postTitle" value="<%= $post->headers->{title} %>">
 
     <div class="row">
         <div class="col col-9">
             <div class="mb-3">
                 <label for="postTitle" class="col-sm-2 col-form-label">Title</label>
-                <input type="text" class="form-control" id="postTitle" name="postTitle" value="<%= $post->headers->{title} %>" disabled>
+                <input type="text" class="form-control" id="postTitleReadOnly" name="postTitleReadOnly" value="<%= $post->headers->{title} %>" disabled>
             </div>
         </div>
         <div class="col col-3">
