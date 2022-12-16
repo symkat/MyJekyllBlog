@@ -8,6 +8,25 @@ MyJekyllBlog comes with a complete set of ansible roles to automate the installa
 
 This software runs my paid web hosting offering: [MyJekyllBlog.com](https://myjekyllblog.com/), please consider registering an account.
 
+
+## Screenshots
+
+![User Post](https://raw.githubusercontent.com/symkat/MyJekyllBlog/master/.github/images/panel-user-post.png "User Post Panel")
+
+The post listing page, where you can add, edit, or delete blog posts.
+
+![User Post Creator](https://raw.githubusercontent.com/symkat/MyJekyllBlog/master/.github/images/panel-user-post-creator.png "User Post Creator")
+
+The post creator, where you can add a new blog post.
+
+![User Jobs](https://raw.githubusercontent.com/symkat/MyJekyllBlog/master/.github/images/panel-user-jobs.png "User Jobs Panel")
+
+The jobs interface, where you can see the progress of your site's deployment and other tasks.
+
+![Admin Servers Panel](https://raw.githubusercontent.com/symkat/MyJekyllBlog/master/.github/images/panel-admin-servers.png "Admin Servers Panel")
+
+The admin interface's server panel.  Where servers the blogs are deployed to can add added and removed.
+
 ## Table of Contents
 
 1. [MyJekyllBlog](#myjekyllblog)
