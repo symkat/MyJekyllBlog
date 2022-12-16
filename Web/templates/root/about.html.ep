@@ -1,9 +1,31 @@
 % layout 'standard', title => 'About', sb_active => 'about';
 
-<h2 class="mt-5 display-6 mb-4">What's This?</h2>
+<h2 class="mt-5 display-5 mb-4">MyJekyllBlog is...</h2>
 
-<p class="fs-5 text-muted">This is MyJekyllBlog: it’s a multi-user CMS and hosting platform for Jekyll blogs.</p>
+<p class="fs-5 text-muted">MyJekyllBlog is a multi-user CMS and hosting platform for Jekyll blogs.</p>
 
-<p class="fs-5 text-muted">Multi-user means many different people can create accounts and make their own blogs.  The CMS feature means that those same people can create posts, pages, upload media for their blogs or edit and delete those same kinds of things.  With the included hosting platform, these blogs can be be displayed directly to people on the Internet.</p>
+<ul>
+    <li class="fs-5 text-muted"><span class="fw-bolder">Multi-user</span>: different people can make an account and create their own blogs.</li>
+    <li class="fs-5 text-muted"><span class="fw-bolder">CMS</span>: people can create, edit and delete blog posts and media.</li>
+    <li class="fs-5 text-muted"><span class="fw-bolder">Hosting Platform</span>: these blogs are available on the Internet.</li>
+</ul>
 
-<p class="fs-5 text-muted">MyJekyllBlog is an open-source project.  You can find the latest version of the source code, instructions, and documentation at <a target="_blank" href="https://github.com/symkat/MyJekyllBlog">MyJekyllBlog's GitHub</a></p>
+<p class="fs-5 text-muted">When I have spoken to friends about MyJekyllBlog, they've asked me: <em>So, how is it different?</em></p>
+
+<p class="fs-5 text-muted">I must confess I have a difficult time answering this question.  I don't know anything that is exactly like MyJekyllBlog and there are a lot of different perspectives one could take on exactly what it is.</p>
+
+<h2 class="mt-5 display-6 mb-4">A Hosting Company</h2>
+
+<p class="fs-5 text-muted">The most obvious is that it is a hosting company.  I offer MyJekyllBlog as a place to host your blog and charge a monthly subscription.  Your blog will be served from multiple webservers and be regularly backed up.  You will have access to the CMS for it and can get in touch if you run into any problems.</p>
+
+<h2 class="mt-5 display-6 mb-4">An Open Source Project</h2>
+
+<p class="fs-5 text-muted">MyJekyllBlog is an MIT licensed open-source project.  The entire system, including the devops tools to install everything, and the billing system to charge customers, is open.  If you'd like to make your own hosting company exactly like this, you can.  If you want to run the software yourself, you can.  The source code is available in the <a target="_blank" href="https://github.com/symkat/MyJekyllBlog">GitHub repository</a>.</p>
+
+<h2 class="mt-5 display-6 mb-4">An Educational Resource</h2>
+
+<p class="fs-5 text-muted">I am writing about the software and development process on <a target="_blank" href="https://tech.myjekyllblog.com/">the tech blog</a>.  I like to think I know a fair amount about building web hosting platforms and writing good web applications.  MyJekyllBlog is the perfect project for me to blog about and share what I know.  I invite you to follow the blog if you'd like to learn more about system administration, web development, or building a hosting platform.</p>
+
+<hr />
+
+<p class="fs-5 text-muted">Thank you for reading, I hope that you find MyJekyllBlog useful in whatever context you use it.</p>

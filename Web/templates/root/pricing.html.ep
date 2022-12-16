@@ -2,8 +2,6 @@
 
 <h2 class="mt-5 display-6 mb-4">Pricing</h2>
 
-<p class="fs-5 text-muted"><a href="<%= $c->url_for( 'show_register' ) %>">Register an account for $7/mo.</a></p>
+<p class="fs-5 text-muted">Subscriptions are $7/mo and include unlimited blogs and posts.</p>
 
-<p class="fs-5 text-muted">Your account includes creating unlimited blogs, posts, and pages.</p>
-
-
+<p class="fs-5 text-muted"><a href="<%= $c->url_for( 'show_register' ) %>">Register an account here.</a></p>
