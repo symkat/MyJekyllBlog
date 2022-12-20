@@ -303,7 +303,7 @@ Take a root shell on the store machine and stop gitea.
 systemctl stop gitea
 ```
 
-Confirm that gitea is stopped by going to the store server over HTTPS.  You should recieve a 502 Bad Gateway error.
+Confirm that gitea is stopped by going to the store server over HTTPS.  You should receive a 502 Bad Gateway error.
 
 ```bash
 su - git
