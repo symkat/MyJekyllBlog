@@ -11,3 +11,4 @@ vault_panel_config_secrets:
   - 'some really long string'
 vault_smtp_pass: 'your smtp provider password'
 vault_gitea_pass: 'the password to set for the managers gitea account'
+vault_panel_config_stripe_api_key: 'stripe-api-key'

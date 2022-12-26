@@ -108,6 +108,22 @@ all:
         enable_invite: 1
         enable_open: 0
 
+      # Free accounts can be configured with limits on the blogs and post they can create.
+      #
+      # When is_limited is enabled, users who are not admins or subscribed will be restricted
+      # to making N blogs and N posts, and if they exceed that number they will be given the subscription
+      # link.
+      free:
+        is_limited: 0
+        user_blog_limit: 1
+        user_post_limit: 5
+
+      stripe:
+        enable: 0
+        lookup_key: 'my-price-token'
+        backend: http://127.0.0.1:8000
+        api_key: "{{ vault_panel_config_stripe_api_key }}"
+
 # Configuration specific to the panel server.
 panel:
   hosts:
