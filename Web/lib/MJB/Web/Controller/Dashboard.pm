@@ -64,6 +64,25 @@ sub do_blog_post ( $c ) {
 
     my $jekyll = $c->jekyll($blog->domain->name);
 
+    # Ensure that the user is allowed to create a post.
+    if ( $c->config->{free}{is_limited} ) {
+
+        # If the user has an active subscription, then no check.
+        if ( $c->stash->{person}->subscription && $c->stash->{person}->subscription->stripe_customer_id ) {
+
+        } else {
+            # If the user is an admin, then no check.
+            if ( $c->stash->{person}->is_admin ) {
+
+            } else {
+                if ( scalar @{$jekyll->list_posts} >= $c->config->{free}{user_post_limit} ) {
+                    $c->flash( error_message => "Your account can create " . $c->config->{free}{user_post_limit} . " posts.  Please upgrade to add another." );
+                    $c->redirect_to( $c->url_for( 'show_dashboard_blog_posts', { id => $blog->id } ) );
+                    return;
+                }
+            }
+        }
+    }
 
     my $post   = $c->stash->{post} = $jekyll->new_post( _make_slug( $date, $title ) );
 

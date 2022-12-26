@@ -104,6 +104,25 @@ sub do_domain ( $c ) {
         push @{$c->stash->{errors}}, "If you continue to experience problems, please contact support.";
         $calling_route = 'show_blog_domain_hosted';
     }
+
+    # Ensure that the user is allowed to create a blog.
+    if ( $c->config->{free}{is_limited} ) {
+
+        # If the user has an active subscription, then no check.
+        if ( $c->stash->{person}->subscription && $c->stash->{person}->subscription->stripe_customer_id ) {
+
+        } else {
+            # If the user is an admin, then no check.
+            if ( $c->stash->{person}->is_admin ) {
+
+            } else {
+                if ( $c->stash->{person}->blogs->count >= $c->config->{free}{user_blog_limit} ) {
+                    push @{$c->stash->{errors}}, "Your account can create " . $c->config->{free}{user_blog_limit} . " blogs.  Please upgrade to add another.";
+                }
+            }
+        }
+    }
+
     
     # Bail on any errors.
     return $c->redirect_error( $calling_route )

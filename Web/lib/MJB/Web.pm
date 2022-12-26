@@ -119,13 +119,6 @@ sub startup ($self) {
 
         # Logged in user exists.
         if ( $c->stash->{person} ) {
-
-            # Did the user register with a subscription and not complete it? - Send them to complete it.
-            if ( $c->stash->{person}->subscription && ! $c->stash->{person}->subscription->stripe_customer_id ) {
-                my $fetch_url = $c->config->{stripe}->{backend} . '/stripe/get-checkout-link?lookup_key=';
-                return $c->redirect_to( $c->ua->get( $fetch_url . $c->config->{stripe}->{lookup_key} )->result->json->{url} );
-            }
-
             # Continue
             return 1;
         }
