@@ -2,6 +2,65 @@
 
 <h2 class="mt-5 display-6 mb-4">Pricing</h2>
 
-<p class="fs-5 text-muted">Subscriptions are $7/mo and include unlimited blogs and posts.</p>
+<p class="fs-5 text-muted mb-4">
+    MyJekyllBlog is a new blog hosting platform for Jekyll blogs.
+    You can register for free and try out all of the features on one blog with up to five posts.
+    A paid account will allow you to make as many blogs as you'd like, each with unlimited posts.
+</p>
 
-<p class="fs-5 text-muted"><a href="<%= $c->url_for( 'show_register' ) %>">Register an account here.</a></p>
+<main>
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Demo</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">$0<small class="text-muted fw-light">/mo</small></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Try it for free with:</li>
+                        <li>&nbsp;</li>
+                        <li>1 blog</li>
+                        <li>5 posts</li>
+                    </ul>
+                    <a href="<%= $c->url_for( 'show_register_open' ) %>" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm border-primary">
+                <div class="card-header py-3 text-white bg-primary border-primary">
+                    <h4 class="my-0 fw-normal">Blogger</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">$7<small class="text-muted fw-light">/mo</small></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>&nbsp;</li>
+                        <li>Unlimited blogs</li>
+                        <li>Unlimited blog posts</li>
+                        <li>Priority email support</li>
+                    </ul>
+                    <a href="<%= $c->url_for( 'show_register_stripe' ) %>" class="w-100 btn btn-lg btn-primary">Sign up</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm ">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Platform</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">&nbsp;</h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Run MyJekyllBlog yourself</li>
+                        <li>Fully open source and MIT licensed</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                    </ul>
+                    <a href="https://github.com/symkat/MyJekyllBlog" _target="blank" class="w-100 btn btn-lg btn-outline-primary">View Project</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
