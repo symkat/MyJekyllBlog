@@ -45,10 +45,12 @@
     group: manager
     mode: 0600
 
+# Note: this will not overwrite changes to the .gitconfig file.
 - name: Create ~manager/.gitconfig
   copy:
     dest: /home/manager/.gitconfig
     content: "[user]\n\temail = manager@{{ domain_name.root }}\n\tname = Manager Bot\n"
+    force: false
     owner: manager
     group: manager
     mode: 0600
