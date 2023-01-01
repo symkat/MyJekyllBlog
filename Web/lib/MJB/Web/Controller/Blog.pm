@@ -11,10 +11,10 @@ use Try::Tiny;
 #==
 # GET /blog | show_blog
 #
-# Redirect the user to the initial step of the blog creation process.
+# Show the template selection for creating a new blog.
 #==
 sub index ( $c ) {
-    $c->redirect_to( 'show_blog_domain_hosted' );
+
 }
 
 #==
@@ -132,7 +132,12 @@ sub do_domain ( $c ) {
     my $hosted_domain = $c->stash->{hosted_domain};
     my $fqdn          = $c->stash->{fqdn};
     my $ssl_domain    = $c->stash->{ssl_domain};
-    my $jekyll        = $c->jekyll($fqdn)->init;
+    
+    # Figure out the template we are using and then initalize the blog with it.
+    my $theme     = $c->param('theme') || 'minima';
+    my $init_repo = $c->config->{theme_gitrepo_prefix} . 'jekyll-' . $theme . '.git';
+
+    my $jekyll    = $c->jekyll($fqdn)->init($init_repo);
 
     my $blog = try {
         $c->db->storage->schema->txn_do( sub {

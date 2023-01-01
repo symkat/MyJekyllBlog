@@ -219,6 +219,8 @@ sub startup ($self) {
     $blog->get ( '/config'       )->to('Dashboard#blog_config'          )->name('show_dashboard_blog_config'      );
     $blog->post( '/config'       )->to('Dashboard#do_blog_config'       )->name('do_dashboard_blog_config'        );
     $blog->get ( '/jobs'         )->to('Dashboard#blog_jobs'            )->name('show_dashboard_blog_jobs'        );
+    $blog->get ( '/theme'        )->to('Dashboard#blog_theme'           )->name('show_dashboard_blog_theme'       );
+    $blog->post( '/theme'        )->to('Dashboard#do_blog_theme'        )->name('do_dashboard_blog_theme'         );
     $blog->get ( '/media'        )->to('Dashboard#blog_media'           )->name('show_dashboard_blog_media'       );
     $blog->post( '/media'        )->to('Dashboard#do_blog_media'        )->name('do_dashboard_blog_media'         );
     $blog->post( '/media/remove' )->to('Dashboard#do_blog_media_remove' )->name('do_dashboard_blog_media_remove'  );

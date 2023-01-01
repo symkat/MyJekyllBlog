@@ -99,14 +99,16 @@ sub _build_config {
 #==
 
 sub init {
-    my ( $self ) = @_;
+    my ( $self, $init_from ) = @_;
+
+    $init_from ||= $self->init_from;
 
     # Refuse to overwrite an already-existing site.
     die "Error: Cannot init when the target directory already exists."
         if -d $self->repo_path;
 
     # Clone the template repo
-    $self->system_command( [ qw( git clone  ), $self->init_from, $self->repo_path ] );
+    $self->system_command( [ qw( git clone  ), $init_from, $self->repo_path ] );
     
     # Kill the git repo
     $self->system_command( [ qw( rm -fr .git ) ], {

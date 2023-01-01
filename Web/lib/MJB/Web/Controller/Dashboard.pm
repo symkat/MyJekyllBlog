@@ -297,7 +297,7 @@ sub do_blog_config ( $c ) {
 #
 # This route shows the jobs interface with recently run jobs and their logs.
 #==
-sub jobs ( $c ) {
+sub blog_jobs ( $c ) {
 
 }
 

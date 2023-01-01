@@ -3,21 +3,21 @@
 <div class="mt-5">
     <div class="progress" style="height: 1px;">
         <div class="progress-bar bg-light" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-        <div class="progress-bar" role="progressbar" style="width: 34%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         <div class="progress-bar bg-light" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar" role="progressbar" style="width: 34%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <div class="progress mt-1" style="height: 20px;">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Template</div>
         <div class="progress-bar bg-success" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Domain Name</div>
-        <div class="progress-bar" role="progressbar" style="width: 34%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Blog Settings</div>
-        <div class="text-center progress-bar-striped" style="width: 33%">Finish</div>
+        <div class="progress-bar bg-primary" role="progressbar" style="width: 34%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Blog Settings</div>
     </div>
 </div>
 
-<h2 style="margin-top: 1.5em; margin-bottom: 1em" class="h2">Blog Settings</h2>
-
-<p>Let's name and describe this!</p>
+<h3 class="h3 mt-4 mb-4">Create New Blog: Settings</h2>
 
 %= include '_base/status_window';
+
+<p class="fs-5 text-muted mb-4">Let's name and describe this!</p>
 
 <form autocomplete="off" style="margin-top: 1.5em" method="POST" action="<%= $c->url_for( 'do_blog_settings' ) %>">
     <div class="mt-3 mb-3">

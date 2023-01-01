@@ -1,30 +1,31 @@
 % layout 'standard', title => 'Create Blog', sb_active => 'dashboard';
 
-<div class="mt-5">
+<div class="mt-5 mb-3">
     <div class="progress" style="height: 1px;">
+        <div class="progress-bar bg-light" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         <div class="progress-bar" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         <div class="progress-bar bg-light" role="progressbar" style="width: 34%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-        <div class="progress-bar bg-light" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <div class="progress mt-1" style="height: 20px;">
-        <div class="progress-bar bg-success" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Domain Name</div>
-        <div class="progress-bar" role="progressbar" style="width: 34%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Blog Settings</div>
-        <div class="text-center progress-bar-striped" style="width: 33%">Finish</div>
+        <div class="progress-bar bg-success" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Template</div>
+        <div class="progress-bar bg-primary" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Domain Name</div>
+        <div class="text-center progress-bar-striped" role="progressbar" style="width: 34%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Blog Settings</div>
     </div>
 </div>
 
-<h3 class="h3 mt-4 mb-4">Create new blog</h3>
-
-<p>The first step of creating your new blog is to choose a domain name.</p>
-
-<p>You can host your blog on a sub domain we provide for free, without any additional configuration.  Enter the sub domain you'd like below and press continue.</p>
-
-<p>If you own your own domain name and would like to use that, please <a href="<%= $c->url_for( 'show_blog_domain_owned' )  %>">click here</a> to continue.</p>
+<h3 class="h3 mt-4 mb-4">Create new blog: Domain Name</h3>
 
 %= include '_base/status_window';
 
+<p class="fs-5 text-muted mb-4">The next step of creating your new blog is to choose a domain name.</p>
+
+<p class="fs-5 text-muted mb-4">You can host your blog on a sub domain we provide for free, without any additional configuration.  Enter the sub domain you'd like below and press continue.</p>
+
+<p class="fs-5 text-muted mb-4">If you own your own domain name and would like to use that, please <a href="<%= $c->url_for( 'show_blog_domain_owned' )->query( theme => $c->param('theme') )  %>">click here</a> to continue.</p>
+
 <form autocomplete="off" class="mt-5" method="POST" action="<%= $c->url_for( 'do_blog_domain' ) %>">
     <input type="hidden" name="calling_route" value="show_blog_domain_hosted">
+    <input type="hidden" name="theme" value="<%= $c->param('theme') %>">
     <div class="row">
         <div class="col-2">
         </div>

@@ -9,7 +9,7 @@
         <div class="float-end">
             <a style="text-decoration: none;" href="<%= $c->url_for( 'show_dashboard_blog_post' ) %>">
                 <span style="color: green; width: 32px; height: 32px;" data-feather="plus-circle"></span>
-                <cpan style="color: black; vertical-align: 30%; font-size: 16px">New Post</span>
+                <span style="color: black; vertical-align: 30%; font-size: 16px">New Post</span>
             </a>
         </div>
     </div>

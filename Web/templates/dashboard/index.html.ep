@@ -9,9 +9,9 @@
 <div class="row">
     <div class="col">
         <div class="float-end">
-            <a style="text-decoration: none;" href="<%= $c->url_for( 'show_blog_domain_hosted' ) %>">
+            <a style="text-decoration: none;" href="<%= $c->url_for( 'show_blog' ) %>">
                 <span style="color: green; width: 32px; height: 32px;" data-feather="plus-circle"></span>
-                <cpan style="color: black; vertical-align: 30%; font-size: 16px">New Blog</span>
+                <span style="color: black; vertical-align: 30%; font-size: 16px">New Blog</span>
             </a>
         </div>
     </div>
