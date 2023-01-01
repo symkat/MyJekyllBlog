@@ -25,7 +25,7 @@ all:
 
     # This is the git repository that contains MyJekyllBlog itself.  It will be checked out
     # during the installation process on the various machines that need it.
-    repo: https://git.modfoss.com/symkat/MyJekyllBlog.git
+    repo: https://github.com/symkat/MyJekyllBlog.git
 
 
     # These are hostnames of specific services.
@@ -80,6 +80,10 @@ all:
 
       # This repo is the initial repository cloned when somebody creates a new blog.
       jekyll_init_repo: git@store.example.com:manager/jekyll-default.git
+      
+      # This is the path to the manager account where jekyll themes are stored,
+      # the application will try to use $theme_gitrepo_prefix .'jekyll-' . $named_theme . 'git'
+      theme_gitrepo_prefix:  git@store.example.com:manager/
 
       # This should be the link to an org on gitea on the store server, the repository will
       # be completed with the domain name, like :mjb/domain.com.git

@@ -2,6 +2,8 @@
 jekyll_init_repo: {{ panel_config.jekyll_init_repo }}
 store_repo_base: {{ panel_config.store_repo_base }}
 
+theme_gitrepo_prefix: {{ panel_config.theme_gitrepo_prefix }}
+
 database:
   mjb:    postgresql://{{ databases.mjb.user }}:{{ databases.mjb.pass }}@{{ databases.mjb.host }}/{{ databases.mjb.name }}
   minion: postgresql://{{ databases.minion.user }}:{{ databases.minion.pass }}@{{ databases.minion.host }}/{{ databases.minion.name }}
