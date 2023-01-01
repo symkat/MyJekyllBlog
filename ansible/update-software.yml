@@ -7,52 +7,8 @@
     - certbot
   vars:
     ansible_ssh_common_args: -oControlMaster=auto -oControlPersist=60s -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no
-  tasks:
-    - name: "Get latest changes from {{ repo }}"
-      git:
-        repo: "{{ repo }}"
-        dest: /home/manager/mjb
-        accept_hostkey: true
-      become: true
-      become_user: manager
-    - name: Rebuild MJB::DB
-      shell: dzil build > /home/manager/.build-logs/mjb-db.log 2>&1
-      args:
-        chdir: /home/manager/mjb/DB
-      environment:
-        PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
-        PERL5LIB:            '/home/manager/perl5/lib/perl5'
-        PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
-        PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
-        PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
-      become: true
-      become_user: manager
-
-    - name: Reinstall MJB::DB
-      shell: cpanm MJB-DB-*.tar.gz
-      args:
-        chdir: /home/manager/mjb/DB
-      environment:
-        PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
-        PERL5LIB:            '/home/manager/perl5/lib/perl5'
-        PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
-        PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
-        PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
-      become: true
-      become_user: manager
-
-    - name: Clean MJB::DB
-      shell: dzil clean
-      args:
-        chdir: /home/manager/mjb/DB
-      environment:
-        PATH:                '/home/manager/perl5/bin:/usr/local/bin:/usr/bin:/bin'
-        PERL5LIB:            '/home/manager/perl5/lib/perl5'
-        PERL_MB_OPT:         '--install_base "/home/manager/perl5"'
-        PERL_MM_OPT:         'INSTALL_BASE=/home/manager/perl5'
-        PERL_LOCAL_LIB_ROOT: '/home/manager/perl5'
-      become: true
-      become_user: manager
+  roles:
+    - mjb-role-webapp
 
 - name: Reload Panel Service
   remote_user: root
