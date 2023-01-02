@@ -189,6 +189,10 @@ sub list_media {
 # collection..
 #
 # It returns a list of MJB::Web::Plugin::Jekyll::Blog::MarkdownFile objects.
+# 
+# Objects are sorted by date with the most most recent first.  The date is based
+# only on the date string in the file, and doesn't include the time, so posts on the
+# same day may still be out of order.
 #
 # For speed read() is NOT called on these objects, so the file will
 # not be loaded until you call read() on the object.
@@ -202,15 +206,25 @@ sub list_posts {
 
     my @files;
 
-    # TODO: Sort by date for the listing on the front end.
     foreach my $file ( $posts->list->each ) {
-        push @files, MJB::Web::Plugin::Jekyll::Blog::MarkdownFile->new(
-            root   => $self->repo_path,
-            path   => $file->to_string,
-        );
+        my $name = $file->basename;
+        my $date = 0;
+        if ( $name =~ /^(\d{4})-(\d{2})-(\d{2})-/ ) {
+            $date = $1 . $2 . $3;
+        }
+
+        push @files, {
+            file => MJB::Web::Plugin::Jekyll::Blog::MarkdownFile->new(
+                root   => $self->repo_path,
+                path   => $file->to_string,
+            ),
+            date => $date,
+        };
     }
 
-    return [ @files ];
+    return [
+        map { $_->{file} } sort { $b->{date} <=> $a->{date} } @files
+    ];
 }
 
 #==
