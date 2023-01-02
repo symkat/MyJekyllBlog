@@ -36,6 +36,8 @@ $t->post_ok( '/blog/domain', form => {
         calling_route => 'show_blog_domain_owned',
     });
 
+sleep 1; # Give a moment for the files to all write from the last step.
+
 # See if we have the blog directory and index.markdown file.
 ok -f $t->app->jekyll( 'blog.example.com' )->root . '/blog.example.com/index.markdown', 
     'Have an index file for the blog!';

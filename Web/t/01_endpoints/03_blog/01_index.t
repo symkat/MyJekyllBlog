@@ -29,9 +29,8 @@ $t->post_ok( '/register/open', form => {
     ->status_is( 302 )
     ->get_ok( '/' );
 
-# Confirm the blog index page redirects to the create blog hosted page.
+# Confirm the blog index page exists.
 $t->get_ok( '/blog' )
-    ->status_is( 302 )
-    ->header_is( location => '/blog/domain/hosted' );
+    ->status_is( 200 );
 
 done_testing();

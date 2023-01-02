@@ -48,8 +48,10 @@ $t->post_ok( '/admin/domain', form => {
 $t->post_ok( '/blog/domain', form => {
         hosted_subdomain => 'blog',
         hosted_domain_id => 1,
-        calling_route => 'show_blog_domain_hosted',
+        calling_route    => 'show_blog_domain_hosted',
     });
+
+sleep 1; # Give a moment for the files to all write from the last step.
 
 # See if we have the blog directory and index.markdown file.
 ok -f $t->app->jekyll( 'blog.example.com' )->root . '/blog.example.com/index.markdown', 
