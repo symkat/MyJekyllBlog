@@ -521,6 +521,63 @@ sub restore_commit {
 
 }
 
+sub import_from_file {
+    my ( $self, $file ) = @_;
+
+    # Check that the repo exists and is latest.
+    $self->_ensure_repository_is_latest;
+    
+    # Remove all of the current files.
+    $self->system_command( [ qw( git rm -rf * )], {
+        chdir => $self->repo_path,
+    });
+    
+    # Remove all of the current files.
+    $self->system_command( [ qw( git commit -m ), "Remove files before restore."], {
+        chdir => $self->repo_path,
+    });
+
+    # Restore all of the files in the export.
+    $self->system_command( [ qw( tar -xzf ), $file->to_string ], {
+        chdir => $self->repo_path,
+    });
+    
+    # Remove all of the current files.
+    $self->system_command( [ qw( git add * .gitignore )], {
+        chdir => $self->repo_path,
+    });
+    
+    # Remove all of the current files.
+    $self->system_command( [ qw( git commit -m ), "Restore files via import."], {
+        chdir => $self->repo_path,
+    });
+
+    # Push the repo to the store server
+    $self->system_command( [ qw( git push origin master ) ], {
+        chdir => $self->repo_path,
+    }) if $self->push_on_change;
+
+    return 1;
+}
+
+sub export_to_file {
+    my ( $self ) = @_;
+
+    # Check that the repo exists and is latest.
+    $self->_ensure_repository_is_latest;
+
+    # Get a temp file.
+    my $file = Mojo::File::tempfile;
+
+    # Make a tgz of the blog contents, without the .git directory.
+    $self->system_command( [ qw( tar --exclude=.git -czf ), $file->to_string, '.' ], {
+        chdir => $self->repo_path,
+    });
+
+    # Return the file object
+    return $file; 
+}
+
 #==
 # This method lists the history of the git repo.
 #

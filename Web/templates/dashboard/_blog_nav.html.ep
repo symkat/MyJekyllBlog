@@ -57,10 +57,19 @@
             <span data-feather="activity"></span> Jobs
         </a>
     </li>
+    
+    <li class="nav-item">
+        <a class="nav-link <%= $page eq 'export' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_export' ) %>"><span data-feather="download-cloud"></span> Export</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link <%= $page eq 'import' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_import' ) %>"><span data-feather="upload-cloud"></span> Import</a>
+    </li>
 
     <li class="nav-item">
         <a class="nav-link <%= $page eq 'settings' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_settings' ) %>"><span data-feather="settings"></span> Settings</a>
     </li>
+
     <li class="nav-item">
         <a class="nav-link <%= $page eq 'history' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_history' ) %>"><span data-feather="calendar"></span> History</a>
     </li>

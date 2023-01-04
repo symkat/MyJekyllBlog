@@ -1,5 +1,6 @@
 package MJB::Web::Controller::Dashboard;
 use Mojo::Base 'Mojolicious::Controller', -signatures;
+use Mojo::File;
 use DateTime;
 
 #=====
@@ -301,6 +302,70 @@ sub blog_jobs ( $c ) {
 
 }
 
+#==
+# GET /dashboard/blog/:id/export | show_dashboard_blog_export { id => blog.id }
+#
+# This route shows the user the export button to let them export their blog.
+#==
+sub blog_export ( $c ) {
+
+}
+
+#==
+# POST /dashboard/blog/:id/export | do_dashboard_blog_export { id => blog.id }
+#
+# This route will create a blog export for the blog.
+#==
+sub do_blog_export ( $c ) {
+    my $blog = $c->stash->{blog};
+    
+    my $jekyll = $c->jekyll($blog->domain->name);
+
+    my $file     = $jekyll->export_to_file;
+    my $filename = sprintf( 'export-%s-%d.tgz', $blog->domain->name, time );
+
+    $c->res->headers->content_disposition( 'attachment; filename=' . $filename );
+    $c->reply->file( $file->to_string );
+}
+
+#==
+# GET /dashboard/blog/:id/import | show_dashboard_blog_import { id => blog.id }
+#
+# This route shows the user the import form to let them import their blog
+# from a backup / export / custom jekyll blog.
+#==
+sub blog_import ( $c ) {
+
+}
+
+#==
+# POST /dashboard/blog/:id/import | do_dashboard_blog_import { id => blog.id }
+#       upload | An HTTP file upload object
+#
+# This route accepts the upload of a .tgz file to restore the blog from.
+#==
+sub do_blog_import ( $c ) {
+    my $blog = $c->stash->{blog};
+    
+    my $jekyll = $c->jekyll($blog->domain->name);
+
+    my $upload = $c->req->upload( 'upload' );
+
+    if ( ! $upload->asset->size ) {
+        $c->flash( error_message => "You must select a file to upload" );
+        $c->redirect_to( $c->url_for( 'show_dashboard_blog_import', { id => $blog->id } ) );
+        return;
+    }
+
+    my $file = Mojo::File::tempfile;
+    $upload->move_to( $file->to_string );
+
+    $jekyll->import_from_file( $file );
+    
+    $c->flash( confirmation => "Imported from the tgz file!" );
+    $c->redirect_to( $c->url_for( 'show_dashboard_blog_import', { id => $blog->id } ) );
+
+}
 #==
 # GET /dashboard/blog/:id/media | show_dashboard_blog_media { id => blog.id }
 #

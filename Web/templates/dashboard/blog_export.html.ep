@@ -1,0 +1,19 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'export'
+
+%= include '_base/status_window';
+
+<p class="mt-4 fs-5 text-muted">Your blog is a collection of files that are processed by Jekyll.  You can export the files to make a local backup or move them to another hosting provider.</p>
+
+
+<div class="row">
+    <div class="col">
+        <form style="margin-top: 1.5em" method="POST" action="<%= $c->url_for( 'do_dashboard_blog_export' ) %>">
+            <input type="hidden" name="setting" value="webroot">
+            <button type="submit" class="btn btn-primary">Create &amp; Download Export</button>
+        </form>
+    </div>
+</div>
+
+<p class="mt-4 fs-6 text-muted">* Please allow a few moments after you click the button for your download to be prepared.</p>

@@ -1,0 +1,18 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'import'
+
+%= include '_base/status_window';
+
+<p class="mt-4 fs-5 text-muted">If you have exported this blog or another blog previously, please select the <span class="fw-bold">.tgz</span> file that you downloaded.</p>
+
+<p class="mt-4 fs-5 text-muted">The current contents of this blog will be deleted, and the contents from your export will be restored.</p>
+
+<form class="row mt-3 gy-2 gx-3 align-items-center" method="POST" enctype="multipart/form-data" action="<%= $c->url_for( 'do_dashboard_blog_import' ) %>">
+    <div class="col-auto">
+        <input type="file" class="form-control" id="upload" name="upload" >
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-primary">Import Blog</button>
+    </div>
+</form>

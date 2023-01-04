@@ -219,10 +219,10 @@ sub startup ($self) {
     $blog->get ( '/config'       )->to('Dashboard#blog_config'          )->name('show_dashboard_blog_config'      );
     $blog->post( '/config'       )->to('Dashboard#do_blog_config'       )->name('do_dashboard_blog_config'        );
     $blog->get ( '/jobs'         )->to('Dashboard#blog_jobs'            )->name('show_dashboard_blog_jobs'        );
-    $blog->get ( '/import'       )->to('Dashboard#blog_import'          )->name('show_dashboard_blog_import'      );
-    $blog->post( '/do_import'    )->to('Dashboard#do_blog_import'       )->name('do_dashboard_blog_import'        );
     $blog->get ( '/export'       )->to('Dashboard#blog_export'          )->name('show_dashboard_blog_export'      );
-    $blog->post( '/do_export'    )->to('Dashboard#do_blog_export'       )->name('do_dashboard_blog_export'        );
+    $blog->post( '/export'       )->to('Dashboard#do_blog_export'       )->name('do_dashboard_blog_export'        );
+    $blog->get ( '/import'       )->to('Dashboard#blog_import'          )->name('show_dashboard_blog_import'      );
+    $blog->post( '/import'       )->to('Dashboard#do_blog_import'       )->name('do_dashboard_blog_import'        );
     $blog->get ( '/media'        )->to('Dashboard#blog_media'           )->name('show_dashboard_blog_media'       );
     $blog->post( '/media'        )->to('Dashboard#do_blog_media'        )->name('do_dashboard_blog_media'         );
     $blog->post( '/media/remove' )->to('Dashboard#do_blog_media_remove' )->name('do_dashboard_blog_media_remove'  );

@@ -35,6 +35,9 @@ use Data::Dumper;
 use Test::Deep;
 use Test::More;
 use File::Path qw( remove_tree );
+use Cwd qw( getcwd );
+use Storable qw( dclone );
+use IPC::Run3 qw( run3 );
 
 sub new {
     my $class = shift;
@@ -185,6 +188,123 @@ sub clear_tempdir {
 
     remove_tree( $ENV{MJB_TESTMODE_TEMPDIR} )
         if -d $ENV{MJB_TESTMODE_TEMPDIR};
+}
+
+#==
+# Run a system command.
+#       $self->system_command( 
+#           [qw( the command here )],
+#           { options => 'here' },
+#       );
+#
+# This method accepts an arrayref with a command, and a hashref with
+# options.
+#
+# The command will be executed.
+#
+# The following options may be passed:
+#       chdir          | Directory to chdir to before executing the command
+#       mask           | A hash like { My$ecretP@ssword => '--PASSWORD--' } to censor in
+#                        logging STDOUT/STDERR, and logging the command itself.
+#       fail_on_stderr | An arrayref like [ 
+#                          qr/pattern/       => 'die reason', 
+#                          qr/other pattern/ => 'another die reason' 
+#                        ] where system_command will emmit a die if the pattern matches on stderr.
+#
+# A hashref will be returned that contains the following keys:
+#  { 
+#    stdout => 'standard output content',
+#    stderr => 'standard error content',
+#    exitno => 1, # the exit status of the command
+#  }
+#
+# If the environment variable MJB_DEBUG is set true, these return values
+# will also be printed to STDOUT.
+#==
+sub system_command {
+    my ( $self, $cmd, $settings ) = @_;
+
+    $settings ||= {};
+
+    # Change the directory, if requested.
+    if ( $settings->{chdir} ) {
+        # Throw an error if that directory doesn't exist.
+        die "Error: directory " . $settings->{chdir} . "doesn't exist."
+            unless -d $settings->{chdir};
+
+        $settings->{return_chdir} = getcwd();
+
+        # Change to that directory, or die with error.
+        chdir $settings->{chdir}
+            or die "Failed to chdir to " . $settings->{chdir} . ": $!";
+    }
+
+    # Mask values we don't want exposed in the logs.
+    my $masked_cmd = dclone($cmd);
+    if ( ref $settings->{mask} eq 'HASH' ) {
+        foreach my $key ( keys %{$settings->{mask}} ) {
+            my $value = $settings->{mask}{$key};
+            $masked_cmd = [ map { s/\Q$key\E/$value/g; $_ } @{$masked_cmd} ];
+        }
+    }
+
+    # Log the lines
+    my ( $out, $err );
+    my $ret = run3( $cmd, \undef, sub {
+        chomp $_;
+        # Mask values we don't want exposed in the logs.
+        if ( ref $settings->{mask} eq 'HASH' ) {
+            foreach my $key ( keys %{$settings->{mask}} ) {
+                my $value = $settings->{mask}{$key};
+                s/\Q$key\E/$value/g;
+            }
+        }
+        $out .= "$_\n";
+    }, sub {
+        chomp $_;
+        # Mask values we don't want exposed in the logs.
+        if ( ref $settings->{mask} eq 'HASH' ) {
+            foreach my $key ( keys %{$settings->{mask}} ) {
+                my $value = $settings->{mask}{$key};
+                s/\Q$key\E/$value/g;
+            }
+        }
+        $err .= "$_\n";
+    });
+
+    # Check stderr for errors to fail on.
+    if ( $settings->{fail_on_stderr} ) {
+        my @tests = @{$settings->{fail_on_stderr}};
+
+        while ( my $regex = shift @tests ) {
+            my $reason = shift @tests;
+
+            if ( $err =~ /$regex/ ) {
+                die $reason;
+            }
+        }
+    }
+
+    # Return to the directory we started in if we chdir'ed.
+    if ( $settings->{return_chdir} ) {
+        chdir $settings->{return_chdir}
+            or die "Failed to chdir to " . $settings->{return_chdir} . ": $!";
+    }
+
+    if ( $ENV{MJB_DEBUG} ) {
+        require Data::Dumper;
+        print Data::Dumper::Dumper({
+            stdout => $out,
+            stderr => $err,
+            exitno => $ret,
+        });
+    }
+
+    return {
+        stdout => $out,
+        stderr => $err,
+        exitno => $ret,
+    };
 }
 
 1;
