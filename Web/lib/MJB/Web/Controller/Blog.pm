@@ -224,7 +224,7 @@ sub settings ( $c ) {
 }
 
 #==
-# POST /blog/:id/settings | show_blog_settings
+# POST /blog/:id/settings | do_blog_settings
 #       configTitle | The title for the blog
 #       configDesc  | The description for the blog
 #       configEmail | An email address for the blog's author
@@ -264,6 +264,103 @@ sub do_settings ( $c ) {
     
     $c->flash( confirmation => "Welcome to the dashboard for your new blog!" );
     $c->redirect_to( $c->url_for( 'show_dashboard_blog', { id => $blog->id } ) );
+}
+
+#==
+# GET /blog/:id/remove | show_blog_remove
+#
+# This gives the user the button to delete their blog and a warning about
+# doing so.
+#==
+sub remove ( $c ) {
+    my $blog = $c->stash->{blog} = $c->db->blog( $c->param('id') );
+
+    # Make sure that a blog can be loaded.
+    if ( ! $blog ) {
+        $c->redirect_to( $c->url_for( 'show_dashboard' ) );
+        return undef;
+    }
+
+    # Make sure the current user owns the blog that has been loaded.
+    if ( $blog->person->id ne $c->stash->{person}->id ) {
+        $c->redirect_to( $c->url_for( 'show_dashboard' ) );
+        return undef;
+    }
+}
+
+#==
+# POST /blog/:id/remove | do_blog_remove
+#
+# This route deletes a blog by doing the following:
+# 
+# - Clear the database entries
+# - Clear the blog from Gitea
+# - Clear the blog repo from the panel server
+# - Purge the blog from the webservers
+# - Purge the site configuration from the webservers
+# - Purge the html root from the webservers
+#==
+sub do_remove ( $c ) {
+    my $blog   = $c->stash->{blog} = $c->db->blog( $c->param('id') );
+    my $domain = $blog->domain->name;
+
+    # Make sure that a blog can be loaded.
+    if ( ! $blog ) {
+        $c->redirect_to( $c->url_for( 'show_dashboard' ) );
+        return undef;
+    }
+
+    # Make sure the current user owns the blog that has been loaded.
+    if ( $blog->person->id ne $c->stash->{person}->id ) {
+        $c->redirect_to( $c->url_for( 'show_dashboard' ) );
+        return undef;
+    }
+
+    # Remove the blog records.
+    try {
+        $c->db->storage->schema->txn_do( sub {
+            my $domain_record = $blog->domain;
+
+            # Delete the repo record.
+            $blog->repo->delete;
+
+            # Delete any existing job records.
+            foreach my $job ( $blog->jobs->all ) {
+                $job->delete;
+            }
+
+            # Delete the blog record itself.
+            $blog->delete;
+
+            # Delete the domain record.
+            $domain_record->delete;
+
+            return 1;
+        });
+    } catch {
+        push @{$c->stash->{errors}}, "Blog could not be removed: $_";
+    };
+    
+    # Bail on any DB errors.
+    return $c->redirect_error( 'show_blog_remove', { id => $blog->id } )
+        if $c->stash->{errors};
+    
+    # Remove the site webroot and config from the webservers. 
+    $c->minion->enqueue( 'purge_blog', [ $domain ] ) 
+        unless $c->is_testmode; # Do not run jobs in test mode.
+    
+    # Remove the repo from this server.
+    $c->jekyll($domain)->remove_repo;
+
+    # Notify the system about the delete, we'll need to manually do the following:
+    # - Remove the git repo from the Gitea server so mjb/<domain> can be used
+    $c->db->system_notes->create({
+        source => 'Blog Deletion',
+        content => "The blog for $domain has been deleted.  Please remove the repo from gitea."
+    });
+    
+    $c->flash( confirmation => "The blog for $domain has been removed." );
+    $c->redirect_to( $c->url_for( 'show_dashboard' ) );
 }
 
 1;

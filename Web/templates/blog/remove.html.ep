@@ -1,0 +1,29 @@
+% layout 'standard', title => 'Remove Blog', sb_active => 'dashboard';
+
+%= include '_base/status_window';
+
+<h2 class="mt-5 display-6 mb-4">Delete <%= $c->stash->{blog}->domain->name %>?</h2>
+
+<p class="mt-4 fs-5 text-muted">Do you want to delete <%= $c->stash->{blog}->domain->name %>?</p>
+
+<p class="mt-4 fs-5 text-muted"><a class="btn btn-primary" href="<%= $c->url_for( 'show_dashboard' ) %>">No, take me back to the dashboard.</a></p>
+
+<p class="mt-4 fs-5 text-muted">If you delete your blog, the contents of your blog will no longer be hosted.</p> 
+
+<p class="mt-4 fs-5 text-muted">The files will be removed and will not be able to be recovered.</p>
+
+<p class="mt-4 fs-5 text-muted">Before you delete your blog, you should consider <a href="<%= $c->url_for( 'show_dashboard_blog_export' ) %>">exporting it</a> so you have a local backup.</p>
+
+<p class="mt-4 fs-5 text-muted">Do you want to delete <%= $c->stash->{blog}->domain->name %>?</p>
+
+<p class="mt-4 fs-5 text-muted"></p>
+
+<div class="row">
+    <div class="col">
+        <form style="margin-top: 1.5em" method="POST" action="<%= $c->url_for( 'do_blog_remove' ) %>">
+            <button type="submit" class="btn btn-danger">Yes, delete <%= $c->stash->{blog}->domain->name %></button>
+        </form>
+    </div>
+</div>
+
+<p class="mt-4 fs-6 text-muted">* Please note the domain may be unavailable for use for a few days after you delete it.  Please <a href="<%= $c->url_for( 'show_contact' ) %>">contact support</a> if you need help using this domain on another account.</p>

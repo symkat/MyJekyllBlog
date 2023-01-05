@@ -87,6 +87,7 @@ sub startup ($self) {
 
     # Blog deployment related jobs.
     $self->minion->add_task( initialize_blog => 'MJB::Web::Task::InitializeBlog' );
+    $self->minion->add_task( purge_blog      => 'MJB::Web::Task::PurgeBlog'      );
     $self->minion->add_task( sync_blog       => 'MJB::Web::Task::SyncBlog'       );
     $self->minion->add_task( sync_blog_media => 'MJB::Web::Task::SyncBlogMedia'  );
 
@@ -243,6 +244,8 @@ sub startup ($self) {
     $auth->get ( '/blog/initialize'    )->to('Blog#do_initialize'       )->name('do_blog_initialize'       );
     $auth->get ( '/blog/:id/settings'  )->to('Blog#settings'            )->name('show_blog_settings'       );
     $auth->post( '/blog/:id/settings'  )->to('Blog#do_settings'         )->name('do_blog_settings'         );
+    $auth->get ( '/blog/:id/remove'    )->to('Blog#remove'              )->name('show_blog_remove'         );
+    $auth->post( '/blog/:id/remove'    )->to('Blog#do_remove'           )->name('do_blog_remove'           );
 
     # Admin Dashboard
     $admin->get ( '/admin'                 )->to('Admin#index'                )->name('show_admin'                 );

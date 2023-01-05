@@ -2,7 +2,7 @@ package MJB::Web::Plugin::Jekyll::Blog;
 use Moo;
 use IPC::Run3 qw( run3 );
 use Cwd qw( getcwd );
-use File::Path qw( make_path );
+use File::Path qw( make_path remove_tree );
 use File::Find;
 use Storable qw( dclone );
 use Mojo::File;
@@ -521,6 +521,12 @@ sub restore_commit {
 
 }
 
+#==
+# This method will import a replacement for the jekyll blog files.
+#
+# Given a Mojo::File object pointing to a .tgz file, unpack the tgz file
+# and replace the blog contents with the contents of the tgz file.
+#== 
 sub import_from_file {
     my ( $self, $file ) = @_;
 
@@ -560,6 +566,10 @@ sub import_from_file {
     return 1;
 }
 
+#==
+# This method exports the repo into a .tgz file, and returns a Mojo::File
+# object for it.
+#==
 sub export_to_file {
     my ( $self ) = @_;
 
@@ -577,6 +587,19 @@ sub export_to_file {
     # Return the file object
     return $file; 
 }
+
+#==
+# This method removes the repository directory.
+# 
+# This directory can be restored by calling 
+# $self->_ensure_repository_is_latest.
+#==
+sub remove_repo {
+    my ( $self ) = @_;
+
+    return remove_tree( $self->repo_path );
+}
+
 
 #==
 # This method lists the history of the git repo.

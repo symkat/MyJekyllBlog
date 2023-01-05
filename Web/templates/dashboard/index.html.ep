@@ -6,6 +6,8 @@
     </ol>
 </nav>
 
+%= include '_base/status_window';
+
 <div class="row">
     <div class="col">
         <div class="float-end">
@@ -24,6 +26,7 @@
             <tr>
                 <th class="text-nowrap">Domain</th>
                 <th class="text-nowrap">Blog Manager</th>
+                <th class="text-nowrap">Remove Blog</th>
             </tr>
         </thead>
         <tbody>
@@ -31,6 +34,7 @@
             <tr>
                 <td><a target="_blank" href="https://<%= $blog->domain->name %>"><%= $blog->domain->name %></a></td>
                 <td><a class="btn btn-sm btn-primary" href="<%= $c->url_for( 'show_dashboard_blog', { id => $blog->id } ) %>">Manage Blog</a></td>
+                <td><a class="btn btn-sm btn-danger" href="<%= $c->url_for( 'show_blog_remove', { id => $blog->id } ) %>">Remove Blog</a></td>
             </tr>
             % }
         </tbody>
