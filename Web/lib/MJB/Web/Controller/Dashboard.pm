@@ -620,6 +620,260 @@ sub do_blog_page_remove ( $c ) {
 }
 
 #==
+# GET /dashboard/blog/:id/files | show_dashboard_blog_files { id => blog.id }
+#
+# This route shows a list of blog files and allows editing or deleting the files.
+#==
+sub blog_files ( $c ) {
+    my $blog = $c->stash->{blog};
+
+    $c->stash->{files} = $c->jekyll($blog->domain->name)->list_files( $c->param('dir'));
+
+    my @dirs = (split( /\//, $c->param('dir') || '' ));
+    $c->stash->{dir_nav_dirs}     = [ '/', @dirs ];
+    $c->stash->{dir_nav_filename} = '.';
+}
+
+#==
+# GET /dashboard/blog/:id/file | show_dashboard_blog_file { id => blog.id }
+#           ? name = 
+#             path =
+#
+# This route shows a list of blog files and allows editing or deleting the files.
+#==
+sub blog_file ( $c ) {
+    my $blog = $c->stash->{blog};
+    my $name = $c->param('name');
+    my $dir  = $c->param('dir');
+
+    $name = sprintf( "%s/%s", $dir, $name ) if $dir;
+
+    my $obj = $c->stash->{file} = $c->jekyll($blog->domain->name)->get_file( $name );
+    
+    # Object exists.
+    return $c->redirect_error( 'show_dashboard_blog_files', { id => $blog->id }, [ 'Cannot find that file.'] )
+        if ! $obj;
+
+    my $file = $obj->{file};
+
+    # Object exists.
+    return $c->redirect_error( 'show_dashboard_blog_files', { id => $blog->id }, [ 'Cannot find that file.'] )
+        if ! $file;
+        
+    # File exists on disk.
+    return $c->redirect_error( 'show_dashboard_blog_files', { id => $blog->id }, [ 'Unable to load file.'] )
+        if ! -e $file or ! -f $file;
+    
+    my @dirs = (split( /\//, $c->param('dir') || '' ));
+    $c->stash->{dir_nav_dirs}     = [ '/', @dirs ];
+
+    $c->stash->{file_content}     = $file->slurp; 
+}
+
+#==
+# POST /dashboard/blog/:id/file | do_dashboard_blog_file { id => blog.id }
+#       file_name | The name of the file
+#       file_type | The type of file
+#       file_path | The directory path to the file
+#
+# This route creates a new file.
+#==
+sub do_blog_file ( $c ) {
+    my $blog      = $c->stash->{blog};
+
+    my $file_name = $c->param('file_name');
+    my $file_type = $c->param('file_type');
+    my $file_path = $c->param('file_path');
+
+    my $jekyll = $c->jekyll($blog->domain->name);
+
+    if ( $file_type eq 'directory' ) {
+        $jekyll->make_dir( $file_name );
+
+        $c->flash( confirmation => "Created directory!" );
+        $c->redirect_to( $c->url_for( 'show_dashboard_blog_files', { id => $blog->id } ) );
+        return;
+    } 
+
+    # Filetype is a markdown, html, or yaml file type only.
+    if ( ! grep { $file_type eq $_ } ( qw( .md .html .yml )) ) {
+        $c->flash( error_message => "Invalid filetype selected.  Please choose from the drop-down menu." );
+        $c->redirect_to( $c->url_for( 'show_dashboard_blog_files', { id => $blog->id } ) );
+        return;
+    }
+
+    $jekyll->make_file( $file_path . '/'. $file_name . $file_type );
+
+    $c->flash( confirmation => "Created file $file_name$file_type!" );
+    $c->redirect_to( $c->url_for( 'show_dashboard_blog_files', { id => $blog->id } )->query( dir => $file_path ) );
+    return;
+}
+
+
+#==
+# POST /dashboard/blog/:id/file/edit | do_dashboard_blog_file_edit { id => blog.id }
+#       file_name | The name of the file
+#       file_path | The directory path to the file
+#       content   | The content for the file.
+#
+# This route updates the content of a file.
+#==
+sub do_blog_file_edit ( $c ) {
+    my $blog      = $c->stash->{blog};
+
+    my $file_name = $c->param('file_name');
+    my $file_path = $c->param('file_path') || '';
+    my $content   = $c->param('content');
+
+    my $jekyll = $c->jekyll($blog->domain->name);
+    
+    my $file = $jekyll->get_file( $file_path . '/'. $file_name )->{file};
+
+    $file->spurt( $content );
+
+    $jekyll->commit_file( $file->to_string, 'Edit file.' );
+
+    $c->flash( confirmation => "Updated file $file_name!" );
+    $c->redirect_to( $c->url_for( 'show_dashboard_blog_files', { id => $blog->id } )->query( dir => $file_path ) );
+
+    return;
+}
+
+#==
+# GET /dashboard/blog/:id/delete | show_dashboard_blog_file_delete { id => blog.id }
+#           ? name = 
+#             path =
+#
+# This route shows a list of blog files and allows editing or deleting the files.
+#==
+sub blog_file_delete ( $c ) {
+    my $blog = $c->stash->{blog};
+    my $name = $c->param('name');
+    my $dir  = $c->param('dir');
+
+    $name = sprintf( "%s/%s", $dir, $name ) if $dir;
+
+    my $obj = $c->stash->{file} = $c->jekyll($blog->domain->name)->get_file( $name );
+    
+    # Object exists.
+    return $c->redirect_error( 'show_dashboard_blog_files', { id => $blog->id }, [ 'Cannot find that file.'] )
+        if ! $obj;
+
+    my $file = $obj->{file};
+
+    # Object exists.
+    return $c->redirect_error( 'show_dashboard_blog_files', { id => $blog->id }, [ 'Cannot find that file.'] )
+        if ! $file;
+        
+    # File exists on disk.
+    return $c->redirect_error( 'show_dashboard_blog_files', { id => $blog->id }, [ 'Unable to load file.'] )
+        if ! -e $file or ! -f $file;
+
+    $c->stash->{file_nav}         = $obj->{dirname};
+    $c->stash->{dir_nav_filename} = $file->basename;
+    $c->stash->{file_content}     = $file->slurp; 
+    
+    my @dirs = (split( /\//, $c->param('dir') || '' ));
+    $c->stash->{dir_nav_dirs}     = [ '/', @dirs ];
+}
+
+#==
+# POST /dashboard/blog/:id/file/delete | do_dashboard_blog_file_delete { id => blog.id }
+#       file_name | The name of the file
+#       file_path | The directory path to the file
+#
+# This route deletes file from the jekyll blog.
+#==
+sub do_blog_file_delete ( $c ) {
+    my $blog      = $c->stash->{blog};
+
+    my $file_name = $c->param('file_name');
+    my $file_path = $c->param('file_path') || '';
+
+    my $jekyll = $c->jekyll($blog->domain->name);
+    
+    my $file = $jekyll->get_file( $file_path . '/'. $file_name )->{file};
+
+    $jekyll->remove_file( $file->to_string, "Remove file." );
+    
+    $c->flash( confirmation => "Removed file $file_name!" );
+    $c->redirect_to( $c->url_for( 'show_dashboard_blog_files', { id => $blog->id } )->query( dir => $file_path ) );
+}
+
+#==
+# GET /dashboard/blog/:id/rename | show_dashboard_blog_file_delete { id => blog.id }
+#           ? name = 
+#             path =
+#
+# This route shows a list of blog files and allows editing or deleting the files.
+#==
+sub blog_file_rename ( $c ) {
+    my $blog = $c->stash->{blog};
+    my $name = $c->param('name');
+    my $dir  = $c->param('dir');
+
+    $name = sprintf( "%s/%s", $dir, $name ) if $dir;
+
+    my $obj = $c->stash->{file} = $c->jekyll($blog->domain->name)->get_file( $name );
+    
+    # Object exists.
+    return $c->redirect_error( 'show_dashboard_blog_files', { id => $blog->id }, [ 'Cannot find that file.'] )
+        if ! $obj;
+
+    my $file = $obj->{file};
+
+    # Object exists.
+    return $c->redirect_error( 'show_dashboard_blog_files', { id => $blog->id }, [ 'Cannot find that file.'] )
+        if ! $file;
+        
+    # File exists on disk.
+    return $c->redirect_error( 'show_dashboard_blog_files', { id => $blog->id }, [ 'Unable to load file.'] )
+        if ! -e $file or ! -f $file;
+
+    $c->stash->{file_nav}         = $obj->{dirname};
+    $c->stash->{dir_nav_filename} = $file->basename;
+    $c->stash->{file_content}     = $file->slurp; 
+    
+    my @dirs = (split( /\//, $c->param('dir') || '' ));
+    $c->stash->{dir_nav_dirs}     = [ '/', @dirs ];
+}
+
+#==
+# POST /dashboard/blog/:id/file/rename | do_dashboard_blog_file_rename { id => blog.id }
+#       file_name | The name of the file
+#       file_path | The directory path to the file
+#       new_name  | 
+#       new_path  | 
+#
+# This route updates the name of a file.
+#==
+sub do_blog_file_rename ( $c ) {
+    my $blog      = $c->stash->{blog};
+
+    my $file_name = $c->param('file_name');
+    my $file_path = $c->param('file_path') || '';
+    
+    my $new_name = $c->param('new_name');
+    my $new_path = $c->param('new_path');
+
+    my $jekyll = $c->jekyll($blog->domain->name);
+
+    my $file = $jekyll->get_file( $file_path . '/'. $file_name )->{file};
+    my $new  = $jekyll->get_file( $new_path . '/'. $new_name )->{file}; 
+
+    # Put the old content into the new file.
+    $new->spurt( $file->slurp );
+
+    # Commit the new file, remove the old file.
+    $jekyll->commit_file( $new->to_string, "Copy from $file_name" );
+    $jekyll->remove_file( $file->to_string, "Moved to $new_name" );
+
+    # Send the user on their way.
+    $c->flash( confirmation => "Renamed file $file_name to $new_name!" );
+    $c->redirect_to( $c->url_for( 'show_dashboard_blog_files', { id => $blog->id } )->query( dir => $new_path ) );
+}
+
+#==
 # Helper Function
 #
 # Create a slug from a date and title.

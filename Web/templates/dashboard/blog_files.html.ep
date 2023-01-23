@@ -1,0 +1,68 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'files'
+
+%= include '_base/status_window';
+
+<div class="row mt-5 mb-5">
+    <div class="col d-flex justify-content-center">
+        <form autocomplete=off class="row gy-2 gx-3 align-items-center" method="POST" action="<%= $c->url_for( 'do_dashboard_blog_file' ) %>">
+            <input type="hidden" name="file_path" value="<%= $c->param('dir') %>">
+            <div class="col-auto">
+                <label for="file_name" class="col-form-label">Create New File or Directory</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" class="form-control" id="file_name" name="file_name" placeholder="file-name (no .extention)">
+            </div>
+            <div class="col-auto">
+                <select name="file_type" class="form-select" aria-label="Select Domain Name">
+                    <option name="file_type" value=".md"      >Markdown File</option>
+                    <option name="file_type" value="directory">directory</option>
+                    <option name="file_type" value=".html"    >HTML File</option>
+                    <option name="file_type" value=".yml"     >YAML File</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-sm btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.link-no-style {
+    color: inherit;
+    text-decoration: none;
+}
+.link-no-style:hover {
+    text-decoration: underline;
+}
+</style>
+
+<div class="card mb-5">
+    <div class="card-header">
+        % for my $dir ( @{$c->stash->{dir_nav_dirs}} ) {
+            <a title="Go to <%= $dir %>" class="link-no-style" href="<%= $c->url_for( 'show_dashboard_blog_files', id => $blog->id )->query( dir => $dir ) %>"><%= $dir eq '/' ? 'docroot' : $dir %></a> /
+            &nbsp;
+        % }
+    </div>
+    <ul class="list-group list-group-flush">
+        % for my $file ( @{$files} ) { 
+            <li class="list-group-item list-group-item-action">
+                <span style="margin-right: 0.25em" class="<%= $file->{is_dir} ? 'text-primary' : '' %>" data-feather="<%= $file->{is_dir} ? 'folder' : 'file' %>"></span> 
+                % if ( $file->{is_dir} ) {
+                     <a class="link-no-style" href="<%= $c->url_for( 'show_dashboard_blog_files' )->query( dir => $file->{dirpath} ) %>"><%= $file->{filename} %></a>
+                % } else {
+                     <a class="link-no-style" href="<%= $c->url_for( 'show_dashboard_blog_file' )->query( dir => $c->param('dir'), name => $file->{filename} ) %>"><%= $file->{filename} %></a>
+                % } 
+                
+                <span class="float-end">
+                    <a style="margin-right: 0.5em" class="link-no-style" href="<%= $c->url_for('show_dashboard_blog_file_rename')->query( dir => $c->param('dir'), name => $file->{filename} ) %>">[Rename]</a>
+                    <a style="margin-right: 0.5em" class="link-no-style" href="<%= $c->url_for('show_dashboard_blog_file_delete')->query( dir => $c->param('dir'), name => $file->{filename} ) %>">[Delete]</a>
+                </span>
+                
+            
+            </li>
+        % }
+    </ul>
+</div>

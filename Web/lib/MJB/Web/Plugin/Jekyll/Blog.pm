@@ -228,6 +228,111 @@ sub list_posts {
 }
 
 #==
+# This method will list files and directories for the blog, according to
+# the rules below.
+#
+# Files are html, markdown, and yml files, that are in the top directory
+# or a subdirectory that does not begin with . or _  
+# 
+# Directories are directories that do not begin with . or _
+#
+#==
+sub list_files {
+    my ( $self, $dir ) = @_;
+    
+    return undef if $dir and $dir =~ m|/\.\./|;
+
+    $self->_ensure_repository_is_latest;
+
+    my $posts = Mojo::File->new( $self->repo_path );
+
+    $posts = $posts->child( $dir ) if $dir;
+
+    my @files;
+
+    foreach my $file ( $posts->list({dir => 1})->each ) {
+        if ( -d $file ) {
+            next if substr($file->basename, 0, 1) eq '_'; # Skip collections.
+
+            push @files, {
+                is_dir   => 1,
+                filename => $file->basename,
+                dirpath  => $file->to_rel( $self->repo_path )->to_string,
+                path     => $file->dirname->to_rel( $self->repo_path )->to_string,
+            };
+
+            next; # We're done with directories.
+        }
+
+        my @allow_exts = ( qw( html md markdown yml yaml ));
+
+        if ( grep { $file->extname eq $_ } @allow_exts ) {
+            push @files, {
+                is_dir   => 0,
+                filename => $file->basename,
+                path     => $file->dirname->to_rel( $self->repo_path )->to_string,
+            };
+        }
+    }
+
+    return [
+        sort { $b->{is_dir} <=> $a->{is_dir} } @files
+    ];
+}
+
+sub get_file {
+    my ( $self, $file_path ) = @_;
+
+    return undef if $file_path =~ m|/\.\./|;
+
+    my $file = Mojo::File->new( $self->repo_path )->child( $file_path );
+
+    my $segments = $file->dirname->to_rel( $self->repo_path )->to_string;
+
+    my @dir;
+    foreach my $segment ( split( m|/|, $segments ) ) {
+        my $path = $dir[-1] ? $dir[-1]->{path} : "";
+
+        push @dir, {
+            filename => $segment,
+            path     => "$path/$segment",
+        }
+    }
+
+    return +{
+        file    => $file,
+        dirname => [ @dir ],
+    }
+
+}
+
+sub make_dir {
+    my ( $self, $dir ) = @_;
+
+    $self->_ensure_repository_is_latest;
+
+    my $root = Mojo::File->new( $self->repo_path );
+
+    my $new_dir = $root->child($dir)->make_path; 
+    
+    return $self;
+
+}
+
+sub make_file {
+    my ( $self, $file ) = @_;
+
+    $self->_ensure_repository_is_latest;
+
+    my $root = Mojo::File->new( $self->repo_path );
+
+    $root->child($file)->touch; 
+    
+    return $self;
+
+}
+
+#==
 # This method removes a markdown file from the git repository for this blog.
 # 
 # It accepts a Mojo::File object to remove.

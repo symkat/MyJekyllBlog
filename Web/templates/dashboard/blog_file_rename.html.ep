@@ -1,0 +1,44 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'files'
+
+%= include '_base/status_window';
+
+<style>
+.link-no-style {
+    color: inherit;
+    text-decoration: none;
+}
+.link-no-style:hover {
+    text-decoration: underline;
+}
+</style>
+                    
+
+<div class="card mt-5 mb-5">
+        <div class="card-header">
+            % for my $dir ( @{$c->stash->{dir_nav_dirs}} ) {
+                <a title="Go to <%= $dir %>" class="link-no-style" href="<%= $c->url_for( 'show_dashboard_blog_files', id => $blog->id )->query( dir => $dir ) %>"><%= $dir eq '/' ? 'docroot' : $dir %></a> /
+                &nbsp;
+            % }
+            <a class="link-no-style" href="<%= $c->url_for( 'show_dashboard_blog_file', id => $blog->id )->query( name => $c->param('name'), dir => $c->param('dir') ) %>"><%= $c->param('name') %></a>
+        </div>
+        <div class="card-body">
+            <p>Rename the file <%= $c->param('name') %>, please enter the new filename:</p>
+
+            <form autocomplete=off method="POST" action="<%= $c->url_for( 'do_dashboard_blog_file_rename', { id => $blog->id } ) %>">
+                <input type="hidden" name="file_name" value="<%= $c->param('name') %>">
+                <input type="hidden" name="file_path" value="<%= $c->param('dir') || '/' %>">
+                
+                <input type="hidden" name="new_path" value="<%= $c->param('dir') || '/' %>">
+                <input type="text" name="new_name" value="<%= $c->param('name') %>">
+
+                <button class="btn btn-primary">Rename File</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -235,6 +235,14 @@ sub startup ($self) {
     $blog->get ( '/page/edit'    )->to('Dashboard#blog_page_edit'       )->name('show_dashboard_blog_page_edit'   );
     $blog->post( '/page/edit'    )->to('Dashboard#do_blog_page_edit'    )->name('do_dashboard_blog_page_edit'     );
     $blog->post( '/page/remove'  )->to('Dashboard#do_blog_page_remove'  )->name('do_dashboard_blog_page_remove'   );
+    $blog->get ( '/files'        )->to('Dashboard#blog_files'           )->name('show_dashboard_blog_files'       );
+    $blog->get ( '/file'         )->to('Dashboard#blog_file'            )->name('show_dashboard_blog_file'        );
+    $blog->post( '/file'         )->to('Dashboard#do_blog_file'         )->name('do_dashboard_blog_file'          );
+    $blog->post( '/file/edit'    )->to('Dashboard#do_blog_file_edit'    )->name('do_dashboard_blog_file_edit'     );
+    $blog->get ( '/file/delete'  )->to('Dashboard#blog_file_delete'     )->name('show_dashboard_blog_file_delete' );
+    $blog->post( '/file/delete'  )->to('Dashboard#do_blog_file_delete'  )->name('do_dashboard_blog_file_delete'   );
+    $blog->get ( '/file/rename'  )->to('Dashboard#blog_file_rename'     )->name('show_dashboard_blog_file_rename' );
+    $blog->post( '/file/rename'  )->to('Dashboard#do_blog_file_rename'  )->name('do_dashboard_blog_file_rename'   );
 
     # Blog Creation
     $auth->get ( '/blog'               )->to('Blog#index'               )->name('show_blog'                );

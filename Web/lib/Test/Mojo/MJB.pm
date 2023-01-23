@@ -89,6 +89,7 @@ sub dump_stash {
         next if $key eq 'cb';
         next if $key eq 'template';
         next if $key eq 'person';
+        next if $key eq 'blog';
         next if $key =~ m|^mojo\.|;
 
         $ds->{$key} = $t->stash->{$key};
