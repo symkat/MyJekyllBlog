@@ -361,36 +361,6 @@ sub remove_markdown_file {
 }
 
 #==
-# This method lists all of the pages that exist in this blog.
-#
-# It will search for .md and .markdown files and returns an arrayref
-# of MJB::Web::Plugin::Jekyll::Blog::MarkdownFile objects.
-#
-# For speed read() is NOT called on these objects, so the file will
-# not be loaded until you call read() on the object.
-#==
-
-sub list_pages {
-    my ( $self ) = @_;
-    
-    $self->_ensure_repository_is_latest;
-
-    my @files;
-
-    find( sub {
-        return unless $_ =~ /\.(?:markdown|md)$/;                          # Only markdown files
-        return if substr((split m|/|, $File::Find::dir)[-1], 0, 1) eq '_'; # Skip directories that start with _
-
-        push @files, MJB::Web::Plugin::Jekyll::Blog::MarkdownFile->new(
-            root => $self->repo_path,
-            path => $File::Find::name,
-        );
-    }, $self->repo_path );
-
-    return [ @files ];
-}
-
-#==
 # This method will load a post by its filename.
 #
 # It returns an MJB::Web::Plugin::Jekyll::Blog::MarkdownFile object
@@ -443,33 +413,6 @@ sub new_post {
         path => $self->repo_path . "/_posts/" . $filename,
     );
 }
-
-#==
-# This method will create a new page.
-#
-# It expects a filepath in the form of my/file/path/and/name.markdown, and will
-# return a MJB::Web::Plugin::Jekyll::Blog::MarkdownFile object.
-#
-# That object should be given to write_post.
-#
-# TODO: The difference between this and the post is that this can go off the root
-# of the repo, where the posts go off the /_post/.
-#
-# Think about how this would work with being refactored the same as the new_post bit...
-# it could be all three should be one function.
-#==
-sub new_page {
-    my ( $self, $filename ) = @_;
-    
-    return undef
-        if $filename =~ m|\.\./|;
-
-    return MJB::Web::Plugin::Jekyll::Blog::MarkdownFile->new(
-        root => $self->repo_path,
-        path => $self->repo_path . $filename,
-    );
-}
-
 
 #==
 # This method writes the jekyll blog configuration file.

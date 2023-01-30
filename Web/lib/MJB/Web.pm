@@ -229,12 +229,6 @@ sub startup ($self) {
     $blog->post( '/media/remove' )->to('Dashboard#do_blog_media_remove' )->name('do_dashboard_blog_media_remove'  );
     $blog->get ( '/history'      )->to('Dashboard#blog_history'         )->name('show_dashboard_blog_history'     );
     $blog->post( '/history'      )->to('Dashboard#do_blog_history'      )->name('do_dashboard_blog_history'       );
-    $blog->get ( '/pages'        )->to('Dashboard#blog_pages'           )->name('show_dashboard_blog_pages'       );
-    $blog->get ( '/page'         )->to('Dashboard#blog_page'            )->name('show_dashboard_blog_page'        );
-    $blog->post( '/page'         )->to('Dashboard#do_blog_page'         )->name('do_dashboard_blog_page'          );
-    $blog->get ( '/page/edit'    )->to('Dashboard#blog_page_edit'       )->name('show_dashboard_blog_page_edit'   );
-    $blog->post( '/page/edit'    )->to('Dashboard#do_blog_page_edit'    )->name('do_dashboard_blog_page_edit'     );
-    $blog->post( '/page/remove'  )->to('Dashboard#do_blog_page_remove'  )->name('do_dashboard_blog_page_remove'   );
     $blog->get ( '/files'        )->to('Dashboard#blog_files'           )->name('show_dashboard_blog_files'       );
     $blog->get ( '/file'         )->to('Dashboard#blog_file'            )->name('show_dashboard_blog_file'        );
     $blog->post( '/file'         )->to('Dashboard#do_blog_file'         )->name('do_dashboard_blog_file'          );
