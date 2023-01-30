@@ -71,7 +71,7 @@ $t->post_ok( "/dashboard/blog/$blog_id/file/rename", form => {
         new_path  => "",
     })
     ->status_is( 302 )
-    ->header_is( location => "/dashboard/blog/$blog_id/files");
+    ->header_is( location => "/dashboard/blog/$blog_id/files?dir=");
 
 # Confirm that index.markdown does not exist anymore.
 $t->get_ok( "/dashboard/blog/$blog_id/file?name=index.markdown" )

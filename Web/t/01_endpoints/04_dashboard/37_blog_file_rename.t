@@ -33,7 +33,7 @@ $t->get_ok( "/dashboard/blog/$blog_id" )
         is $self->stash->{blog}->domain->name, 'blog.example.com', "Correct domain name for id.";
     });
 
-$t->get_ok( "/dashboard/blog/$blog_id/file/rename?file_name=index.markdown" )
+$t->get_ok( "/dashboard/blog/$blog_id/file/rename?name=index.markdown" )
     ->status_is( 200 );
 #==
 # Remove Jekyll blog repos that were created as a part of this test.
