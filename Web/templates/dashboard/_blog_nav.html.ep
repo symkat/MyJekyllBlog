@@ -27,21 +27,6 @@
     % }
     
     <li class="nav-item">
-        <a class="nav-link <%= $page eq 'pages' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_pages' ) %>"><span data-feather="clipboard"></span> Pages</a>
-    </li>
-    
-    % if ( $page eq 'page-create' ) {
-        <li class="nav-item">
-            <a class="nav-link active" href="#"><span data-feather="file-plus"></span> Page Creator</a>
-        </li>
-    % }
-    % if ( $page eq 'page-edit' ) {
-        <li class="nav-item">
-            <a class="nav-link active" href="#"><span data-feather="edit"></span> Page Editor</a>
-        </li>
-    % }
-    
-    <li class="nav-item">
         <a class="nav-link <%= $page eq 'files' ? 'active' : '' %>" href="<%= $c->url_for( 'show_dashboard_blog_files' ) %>"><span data-feather="file"></span> Files</a>
     </li>
 
