@@ -140,6 +140,12 @@
                                 Open Source
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" target="_blank" href="https://tech.myjekyllblog.com">
+                                <span data-feather="book-open"></span>
+                                Technical Blog
+                            </a>
+                        </li>
                     </ul>
 
                     % if ( $c->stash->{person} ) {
