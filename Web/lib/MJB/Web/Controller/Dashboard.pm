@@ -2,6 +2,7 @@ package MJB::Web::Controller::Dashboard;
 use Mojo::Base 'Mojolicious::Controller', -signatures;
 use Mojo::File;
 use DateTime;
+use Encode qw( decode_utf8 encode_utf8 );
 
 #=====
 # This file handles the dashboard panel
@@ -525,7 +526,7 @@ sub blog_file ( $c ) {
     my @dirs = (split( /\//, $c->param('dir') || '' ));
     $c->stash->{dir_nav_dirs}     = [ '/', @dirs ];
 
-    $c->stash->{file_content}     = $file->slurp; 
+    $c->stash->{file_content}     = decode_utf8($file->slurp); 
 }
 
 #==
@@ -587,7 +588,7 @@ sub do_blog_file_edit ( $c ) {
     
     my $file = $jekyll->get_file( $file_path . '/'. $file_name )->{file};
 
-    $file->spurt( $content );
+    $file->spurt( encode_utf8($content) );
 
     $jekyll->commit_file( $file->to_string, 'Edit file.' );
 
