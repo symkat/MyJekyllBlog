@@ -562,6 +562,8 @@ sub do_blog_file ( $c ) {
     }
 
     $jekyll->make_file( $file_path . '/'. $file_name . $file_type );
+    
+    $c->sync_blog( $blog );
 
     $c->flash( confirmation => "Created file $file_name$file_type!" );
     $c->redirect_to( $c->url_for( 'show_dashboard_blog_files', { id => $blog->id } )->query( dir => $file_path ) );
@@ -591,6 +593,8 @@ sub do_blog_file_edit ( $c ) {
     $file->spurt( encode_utf8($content) );
 
     $jekyll->commit_file( $file->to_string, 'Edit file.' );
+    
+    $c->sync_blog( $blog );
 
     $c->flash( confirmation => "Updated file $file_name!" );
     $c->redirect_to( $c->url_for( 'show_dashboard_blog_files', { id => $blog->id } )->query( dir => $file_path ) );
@@ -654,6 +658,8 @@ sub do_blog_file_delete ( $c ) {
     my $file = $jekyll->get_file( $file_path . '/'. $file_name )->{file};
 
     $jekyll->remove_file( $file->to_string, "Remove file." );
+    
+    $c->sync_blog( $blog );
     
     $c->flash( confirmation => "Removed file $file_name!" );
     $c->redirect_to( $c->url_for( 'show_dashboard_blog_files', { id => $blog->id } )->query( dir => $file_path ) );
@@ -726,6 +732,8 @@ sub do_blog_file_rename ( $c ) {
     # Commit the new file, remove the old file.
     $jekyll->commit_file( $new->to_string, "Copy from $file_name" );
     $jekyll->remove_file( $file->to_string, "Moved to $new_name" );
+    
+    $c->sync_blog( $blog );
 
     # Send the user on their way.
     $c->flash( confirmation => "Renamed file $file_name to $new_name!" );
