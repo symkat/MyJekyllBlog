@@ -215,10 +215,6 @@ sub startup ($self) {
     $blog->get ( '/post/alter'   )->to('Dashboard#blog_post_alter'      )->name('show_dashboard_blog_post_alter'  );
     $blog->post( '/post/alter'   )->to('Dashboard#do_blog_post_alter'   )->name('do_dashboard_blog_post_alter'    );
     $blog->post( '/post/remove'  )->to('Dashboard#do_blog_post_remove'  )->name('do_dashboard_blog_post_remove'   );
-    $blog->get ( '/settings'     )->to('Dashboard#blog_settings'        )->name('show_dashboard_blog_settings'    );
-    $blog->post( '/settings'     )->to('Dashboard#do_blog_settings'     )->name('do_dashboard_blog_settings'      );
-    $blog->get ( '/config'       )->to('Dashboard#blog_config'          )->name('show_dashboard_blog_config'      );
-    $blog->post( '/config'       )->to('Dashboard#do_blog_config'       )->name('do_dashboard_blog_config'        );
     $blog->get ( '/jobs'         )->to('Dashboard#blog_jobs'            )->name('show_dashboard_blog_jobs'        );
     $blog->get ( '/export'       )->to('Dashboard#blog_export'          )->name('show_dashboard_blog_export'      );
     $blog->post( '/export'       )->to('Dashboard#do_blog_export'       )->name('do_dashboard_blog_export'        );
@@ -244,8 +240,6 @@ sub startup ($self) {
     $auth->get ( '/blog/domain/owned'  )->to('Blog#domain_owned'        )->name('show_blog_domain_owned'   );
     $auth->post( '/blog/domain'        )->to('Blog#do_domain'           )->name('do_blog_domain'           );
     $auth->get ( '/blog/initialize'    )->to('Blog#do_initialize'       )->name('do_blog_initialize'       );
-    $auth->get ( '/blog/:id/settings'  )->to('Blog#settings'            )->name('show_blog_settings'       );
-    $auth->post( '/blog/:id/settings'  )->to('Blog#do_settings'         )->name('do_blog_settings'         );
     $auth->get ( '/blog/:id/remove'    )->to('Blog#remove'              )->name('show_blog_remove'         );
     $auth->post( '/blog/:id/remove'    )->to('Blog#do_remove'           )->name('do_blog_remove'           );
 
@@ -276,4 +270,3 @@ sub startup ($self) {
 }
 
 1;
-
