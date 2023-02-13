@@ -42,7 +42,7 @@ $t->post_ok( "/dashboard/blog/$blog_id/export" )
         } );
 
         # Confirm the index.markdown file exists.
-        ok( -f $dir->to_string . '/index.markdown', 'Index file exists in export.')
+        ok( -f $dir->to_string . '/index.md', 'Index file exists in export.')
 
     });
 

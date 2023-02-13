@@ -45,7 +45,7 @@ $t->get_ok( "/dashboard/blog/$blog_id/files" )
     });
 
 # Load a file that exists and confirm the contents and status.
-$t->get_ok( "/dashboard/blog/$blog_id/file?name=index.markdown" )
+$t->get_ok( "/dashboard/blog/$blog_id/file?name=index.md" )
     ->status_is( 200 )
     ->code_block( sub {
         my $self = shift;

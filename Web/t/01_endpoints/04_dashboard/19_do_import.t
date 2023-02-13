@@ -12,7 +12,7 @@ MJB::Web::Test::enable_testing_database();
 # 1. Create user and login.
 # 2. Make a new blog.
 # 3. Submit an export request and get the file
-# 4. Ensure that the index.markdown file is in the export.
+# 4. Ensure that the index.md file is in the export.
 # 5. Create a new file in this export, and then repackage it
 # 6. Submit the modified file to be imported, confirm it works.
 # 7. Export the blog and confirm the new file exists.
@@ -44,7 +44,7 @@ $t->post_ok( "/dashboard/blog/$blog_id/export" )
         } );
 
         # Confirm the index.markdown file exists.
-        ok( -f $dir->to_string . '/index.markdown', 'Index file exists in export.');
+        ok( -f $dir->to_string . '/index.md', 'Index file exists in export.');
         
         # Confirm the new.markdown file doesn't exist.
         ok( ! -f $dir->to_string . '/new.markdown', "New file doesn't exists in first export.");
@@ -83,7 +83,7 @@ $t->post_ok( "/dashboard/blog/$blog_id/export" )
         } );
 
         # Confirm the index.markdown file exists.
-        ok( -f $dir->to_string . '/index.markdown', 'Index file exists in export.');
+        ok( -f $dir->to_string . '/index.md', 'Index file exists in export.');
         
         # Confirm the new.markdown file does exist - the import worked!
         ok( -f $dir->to_string . '/new.markdown', "New file exists - the export worked.");

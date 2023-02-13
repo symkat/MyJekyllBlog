@@ -45,7 +45,7 @@ $t->get_ok( "/dashboard/blog/$blog_id/files" )
     });
 
 # Load a file that exists and confirm the contents and status.
-$t->get_ok( "/dashboard/blog/$blog_id/file?name=index.markdown" )
+$t->get_ok( "/dashboard/blog/$blog_id/file?name=index.md" )
     ->status_is( 200 )
     ->code_block( sub {
         my $self = shift;
@@ -54,13 +54,13 @@ $t->get_ok( "/dashboard/blog/$blog_id/file?name=index.markdown" )
 
 # Delete that file.
 $t->post_ok( "/dashboard/blog/$blog_id/file/delete", form => {
-        file_name => 'index.markdown',
+        file_name => 'index.md',
         file_path => "",
     })
     ->status_is( 302 );
 
 # Load a file that doesn't exist, confirm the error redirect and message.
-$t->get_ok( "/dashboard/blog/$blog_id/file?name=index.markdown" )
+$t->get_ok( "/dashboard/blog/$blog_id/file?name=index.md" )
     ->status_is( 302 )
     ->header_is( location => "/dashboard/blog/$blog_id/files" )
     ->code_block( sub {
