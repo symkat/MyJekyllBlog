@@ -106,38 +106,16 @@
                     <hr />
 
                     <ul class="nav flex-column">
-                        % if ( ! $c->stash->{person} ) {
                         <li class="nav-item">
                             <a class="nav-link <%= $sb_active eq "home" ? "active" : "" %>"  aria-current="page" href="<%= $c->url_for( 'show_homepage' ) %>">
                                 <span data-feather="home"></span>
                                 Home
                             </a>
                         </li>
-                        % }
-                        <li class="nav-item">
-                            <a class="nav-link <%= $sb_active eq "about" ? "active" : "" %>"  aria-current="page" href="<%= $c->url_for( 'show_about' ) %>">
-                                <span data-feather="info"></span>
-                                About
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link <%= $sb_active eq "contact" ? "active" : "" %>"  aria-current="page" href="<%= $c->url_for( 'show_contact' ) %>">
                                 <span data-feather="mail"></span>
                                 Contact
-                            </a>
-                        </li>
-                        % if ( ! $c->stash->{person} ) {
-                        <li class="nav-item">
-                            <a class="nav-link <%= $sb_active eq "pricing" ? "active" : "" %>"  aria-current="page" href="<%= $c->url_for( 'show_pricing' ) %>">
-                                <span data-feather="dollar-sign"></span>
-                                Pricing
-                            </a>
-                        </li>
-                        % }
-                        <li class="nav-item">
-                            <a class="nav-link <%= $sb_active eq "open_source" ? "active" : "" %>"  aria-current="page" href="<%= $c->url_for( 'show_open_source' ) %>">
-                                <span data-feather="github"></span>
-                                Open Source
                             </a>
                         </li>
                         <li class="nav-item">

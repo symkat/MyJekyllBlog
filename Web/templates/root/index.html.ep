@@ -3,16 +3,124 @@
 <header>
     <div class="pricing-header mt-5 mb-3 p-3 pb-md-4 mx-auto text-center">
         <h1 class="display-4 fw-normal mb-3">Welcome To MyJekyllBlog</h1>
-        <p class="fs-5 text-muted">MyJekyllBlog is a CMS and Hosting Platform for Jekyll Blogs.</p>
+        <p class="fs-5 text-muted">MyJekyllBlog is a Content Management System and Hosting Platform for Jekyll Blogs</p>
 
-        <p><a href="<%= $c->url_for( 'show_register' ) %>" class="btn btn-primary btn-lg">Sign Up</a></p>
-
-        <!-- Demo Video -->
+        <!-- 
         <iframe width="1008" height="567" src="https://www.youtube.com/embed/WqwF2kgZMAs" title="YouTube video player" 
             frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
         </iframe>
+        Demo Video -->
 
+        <div style="height: 7em"></div>
+        
+        <p class="fs-5 text-muted">Create and edit blog posts, pages, and media in the dashboard.</p>
+        
+        <div class="row">
+            <div class="col" >
+                <div style="width: 75%; margin: 0 auto; float: none" class="card mb-4 rounded-3 shadow-sm">
+                    <img src="https://raw.githubusercontent.com/symkat/MyJekyllBlog/master/.github/images/panel-user-post-creator.png" class="card-img-top" alt="Post Editor">
+        
+                </div>
+            </div>
+        </div>
 
+        <p class="fs-5 text-muted">Use themes like Just The Docs or Minima for your documentation and blog</p>
+
+        <div class="row">
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <img src="https://raw.githubusercontent.com/symkat/MyJekyllBlog/56a4989d7c43432c7ff550d90d4739dcf993c5e9/.github/images/minima.png" class="card-img-top" alt="Theme - Minima">
+                </div>
+            </div>
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <img src="https://raw.githubusercontent.com/symkat/MyJekyllBlog/56a4989d7c43432c7ff550d90d4739dcf993c5e9/.github/images/jtd-light.png" class="card-img-top" alt="Theme - Just The Docs">
+                </div>
+            </div>
+        </div>
+        
+        <p class="fs-5 text-muted">Dark mode too!</p>
+        
+        <div class="row">
+            <div class="col" >
+                <div style="width: 75%; margin: 0 auto; float: none" class="card mb-4 rounded-3 shadow-sm">
+                    <img src="https://raw.githubusercontent.com/symkat/MyJekyllBlog/56a4989d7c43432c7ff550d90d4739dcf993c5e9/.github/images/jtd-dark.png" class="card-img-top" alt="Theme - Just The Docs">
+                </div>
+            </div>
+        </div>
+        
+        <div style="height: 7em"></div>
+
+        <h2 class="display-5 fw-normal mb-3">Open Source</h1>
+
+        <p class="fs-5 text-muted">Every part of MyJekyllBlog is open source and MIT licensed, giving you absolute freedom.  You can see the <a href="https://github.com/symkat/MyJekyllBlog" target="_blank">GitHub Repository for MyJekyllBlog</a> to obtain a copy of the source code.</p>
+        <p class="fs-5 text-muted">The development process is written about on <a target="_blank" href="https://tech.myjekyllblog.com">The Technical Blog</a> with updates at least each Monday and Friday.</p>  
+
+        <div style="height: 7em"></div>
+
+        <h2 class="display-5 fw-normal mb-3">Pricing</h1>
+
+        <p class="fs-5 text-muted">MyJekyllBlog makes money by charging for hosting services, I invite you to sign up.</p>
+
+        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header py-3">
+                        <h4 class="my-0 fw-normal">Demo</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">$0<small class="text-muted fw-light">/mo</small></h1>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li>Try it for free with:</li>
+                            <li>&nbsp;</li>
+                            <li>1 blog</li>
+                            <li>5 posts</li>
+                        </ul>
+                        <a href="<%= $c->url_for( 'show_register_open' ) %>" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm border-primary">
+                    <div class="card-header py-3 text-white bg-primary border-primary">
+                        <h4 class="my-0 fw-normal">Blogger</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">$7<small class="text-muted fw-light">/mo</small></h1>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li>&nbsp;</li>
+                            <li>Unlimited blogs</li>
+                            <li>Unlimited blog posts</li>
+                            <li>Priority email support</li>
+                        </ul>
+                        <a href="<%= $c->url_for( 'show_register_stripe' ) %>" class="w-100 btn btn-lg btn-primary">Sign up</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm ">
+                    <div class="card-header py-3">
+                        <h4 class="my-0 fw-normal">Platform</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">&nbsp;</h1>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li>Run MyJekyllBlog yourself</li>
+                            <li>Fully open source and MIT licensed</li>
+                            <li>&nbsp;</li>
+                            <li>&nbsp;</li>
+                        </ul>
+                        <a href="https://github.com/symkat/MyJekyllBlog" target="_blank" class="w-100 btn btn-lg btn-outline-primary">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="height: 7em"></div>
+
+        <h2 class="display-5 fw-normal mb-3">Who Are You?</h1>
+        
+        <p class="fs-5 text-muted">I’m Kate Parkhurst and I live in Las Vegas with my wife and two cats.  I made my first website when I was 9 years old and began playing with Linux at the same time.  I came up in the southern California web hosting community and worked at Dreamhost, MediaTemple and EdgeCast, then spent five years with a wonderful Perl company before venturing out on my own this past year.</p>
+        <p class="fs-5 text-muted">Thank you.</p>
     </div>
 </header>
-
