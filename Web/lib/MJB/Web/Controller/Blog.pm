@@ -196,10 +196,20 @@ sub do_domain ( $c ) {
             # We we're creating an SSL cert, wait until that is done.
             $ssl_job_id ? ( parents => [ $ssl_job_id ] ) : (),
         });
+
         $blog->create_related( 'jobs', { minion_job_id => $build_job_id } );
+        
+        my $sync_job_id = $c->minion->enqueue( 'sync_blog', [ $blog->id ], {
+            notes    => { '_bid_' . $blog->id => 1 },
+            priority => $blog->build_priority,
+            parents  => [ $build_job_id ],
+        });
+        
+        $blog->create_related( 'jobs', { minion_job_id => $sync_job_id } );
     }
     
-    $c->redirect_to( $c->url_for( 'show_blog_settings', { id => $blog->id } ) );
+    $c->flash( confirmation => "Welcome to the dashboard for your new blog!" );
+    $c->redirect_to( $c->url_for( 'show_dashboard_blog', { id => $blog->id } ) );
 }
 
 #==
