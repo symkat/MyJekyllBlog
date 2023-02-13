@@ -15,29 +15,33 @@
     </div>
 </div>
 
-<table style="border: 1px solid #ccc" class="table">
-    <tbody>
-        <tr>
-            <th class="text-nowrap">Title</th>
-            <th class="text-nowrap">Date</th>
-            <th class="text-nowrap">Edit</th>
-            <th class="text-nowrap">Delete</th>
-        </tr>
-    </thead>
-    <tbody>
-        % for my $post ( @{$blog_posts} ) { 
-        <tr>
-            <td><a href="<%= $c->url_for( 'show_dashboard_blog', { id => $blog->id } ) %>"><%= $post->headers->{title} %></a></td>
-            <td><a href="<%= $c->url_for( 'show_dashboard_blog', { id => $blog->id } ) %>"><%= $post->headers->{date} %></a></td>
-            <td><a class="btn btn-sm btn-primary" href="<%= $c->url_for( 'show_dashboard_blog_post_edit', { id => $blog->id } )->query( mdfile => $post->filename ) %>">Edit Post</a></td>
-            <td>
-                <form style="margin-top: 1.5em; display: inline;" method="POST" action="<%= $c->url_for( 'do_dashboard_blog_post_remove' ) %>">
-                    <input type="hidden" name="file" value="<%= $post->filename %>">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete Post</button>
-                </form>
-            </td>
-        </tr>
-        % }
-    </tbody>
-</table>
+<style>
 
+.link-no-style {
+    color: inherit;
+    text-decoration: none;
+}
+.link-no-style:hover {
+    text-decoration: underline;
+}
+</style>
+
+<div class="card mb-5">
+    <div class="card-header">
+        Your Posts
+    </div>
+    <ul class="list-group list-group-flush">
+        % for my $post ( @{$blog_posts} ) { 
+            <li class="list-group-item list-group-item-action">
+                <span style="margin-right: 0.25em" class="" data-feather="file-text"></span> 
+                <a class="link-no-style" href="<%= $c->url_for( 'show_dashboard_blog_post_edit', { id => $blog->id } )->query( mdfile => $post->filename ) %>"><%= $post->headers->{title} %></a>
+                
+                <span class="float-end">
+                    <a style="margin-right: 0.5em" class="link-no-style" href="<%= $c->url_for('show_dashboard_blog_post_delete')->query( post => $post->filename, title => $post->headers->{title} ) %>">[Delete]</a>
+                </span>
+                
+            
+            </li>
+        % }
+    </ul>
+</div>

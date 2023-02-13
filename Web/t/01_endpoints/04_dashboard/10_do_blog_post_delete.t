@@ -50,7 +50,7 @@ ok -f $t->app->jekyll( 'blog.example.com' )->root . '/blog.example.com/_posts/20
 
 
 # Make an edit to the post
-$t->post_ok( "/dashboard/blog/$blog_id/post/remove", form => {
+$t->post_ok( "/dashboard/blog/$blog_id/post/delete", form => {
         file      => '2022-11-27-first-post.markdown',
     })
     ->status_is( 302 )

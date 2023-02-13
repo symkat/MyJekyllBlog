@@ -193,12 +193,23 @@ sub do_blog_post_alter ( $c ) {
 }
 
 #==
-# POST /dashboard/blog/:id/post/remove | show_dashboard_blog_post_remove { id => blog.id }
+# GET /dashboard/blog/:id/post/delete | show_dashboard_blog_post_delete { id => blog.id }
+#       file  | This is the name of the file for the post to remove
+#       title | The title of the file for user-display purposes. 
+#
+# This route is used to remove a blog post.
+#==
+sub blog_post_delete ( $c ) {
+
+}
+
+#==
+# POST /dashboard/blog/:id/post/delete | do_dashboard_blog_post_delete { id => blog.id }
 #       file | This is the name of the file for the post to remove
 #
 # This route is used to remove a blog post.
 #==
-sub do_blog_post_remove ( $c ) {
+sub do_blog_post_delete ( $c ) {
     my $blog = $c->stash->{blog};
     
     my $jekyll = $c->jekyll($blog->domain->name);

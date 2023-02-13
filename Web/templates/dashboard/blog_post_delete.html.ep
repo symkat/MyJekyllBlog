@@ -1,0 +1,38 @@
+% layout 'standard', title => 'Dashboard', sb_active => 'dashboard';
+
+%= include 'dashboard/_blog_nav', page => 'posts'
+
+%= include '_base/status_window';
+
+<style>
+.link-no-style {
+    color: inherit;
+    text-decoration: none;
+}
+.link-no-style:hover {
+    text-decoration: underline;
+}
+</style>
+                    
+
+<div class="card mt-5 mb-5">
+        <div class="card-header">
+            Delete the post titled <span class="fw-bold"><%= $c->param('title') %></span>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" action="<%= $c->url_for( 'do_dashboard_blog_post_delete' ) %>">
+                <input type="hidden" name="file" value="<%= $c->param('post') %>">
+                <button type="submit" class="btn btn-danger">Yes, delete post</button>
+            </form>
+
+
+            <br /> 
+            <a style="padding-left: 1.5em" href="<%= $c->url_for('show_dashboard_blog_posts', { id => $blog->id } ) %>">No, go back</a>
+        </div>
+    </div>
+</div>
+
+
+

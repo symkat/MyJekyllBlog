@@ -214,7 +214,8 @@ sub startup ($self) {
     $blog->post( '/post/edit'    )->to('Dashboard#do_blog_post_edit'    )->name('do_dashboard_blog_post_edit'     );
     $blog->get ( '/post/alter'   )->to('Dashboard#blog_post_alter'      )->name('show_dashboard_blog_post_alter'  );
     $blog->post( '/post/alter'   )->to('Dashboard#do_blog_post_alter'   )->name('do_dashboard_blog_post_alter'    );
-    $blog->post( '/post/remove'  )->to('Dashboard#do_blog_post_remove'  )->name('do_dashboard_blog_post_remove'   );
+    $blog->get ( '/post/delete'  )->to('Dashboard#blog_post_delete'     )->name('show_dashboard_blog_post_delete' );
+    $blog->post( '/post/delete'  )->to('Dashboard#do_blog_post_delete'  )->name('do_dashboard_blog_post_delete'   );
     $blog->get ( '/jobs'         )->to('Dashboard#blog_jobs'            )->name('show_dashboard_blog_jobs'        );
     $blog->get ( '/export'       )->to('Dashboard#blog_export'          )->name('show_dashboard_blog_export'      );
     $blog->post( '/export'       )->to('Dashboard#do_blog_export'       )->name('do_dashboard_blog_export'        );
