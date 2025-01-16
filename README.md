@@ -6,8 +6,6 @@ Multi-user means many different people can create accounts and make their own bl
 
 MyJekyllBlog comes with a complete set of ansible roles to automate the installation.
 
-This software runs my paid web hosting offering: [MyJekyllBlog.com](https://myjekyllblog.com/), please consider registering an account.
-
 
 ## Screenshots
 
